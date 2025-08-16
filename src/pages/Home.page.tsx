@@ -1,11 +1,9 @@
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
-import { Welcome } from '../components/Welcome/Welcome';
+import { useMantineColorScheme } from '@mantine/core';
+import { MusicSchool } from '../components/Main/Main';
 
 export function HomePage() {
-  return (
-    <>
-      <Welcome />
-      <ColorSchemeToggle />
-    </>
-  );
+  const { setColorScheme } = useMantineColorScheme();
+  setColorScheme('dark');
+
+  return <MusicSchool />;
 }

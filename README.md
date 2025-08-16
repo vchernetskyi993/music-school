@@ -32,3 +32,20 @@ This template comes with the following features:
 - `storybook` – starts storybook dev server
 - `storybook:build` – build production storybook bundle to `storybook-static`
 - `prettier:write` – formats all files with Prettier
+
+## Guitar learning application
+
+### Tooling
+
+* https://github.com/ianprime0509/pitchy JS pitch detector
+* https://github.com/tonaljs/tonal JS music theory
+
+### Visualizer
+
+* Guitar sound to UI (frequency, letter + number, staff)
+
+### Games
+
+* App shows note in octave (letter + number, staff) -> validates instrument note recorded by micro
+* App plays note -> validates same note recorded by micro
+
