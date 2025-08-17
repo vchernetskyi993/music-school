@@ -9,12 +9,12 @@ export type Props = {
   detector?: Detector;
   rate?: number;
 };
-type State = { notes: { note: string; pitch: number }[] };
+type State = { note: string; pitch: number };
 
 const minClarity = 95;
 
 export function MusicSchool({ node, detector, rate }: Props) {
-  const [state, dispatch] = useReducer(reducer, { notes: [] });
+  const [state, dispatch] = useReducer(reducer, { note: 'C4', pitch: 263 });
   useEffect(() => {
     if (node && detector && rate) {
       findPitch(node, detector, rate).then((pitch) => dispatch(Math.round(pitch)));
@@ -22,17 +22,15 @@ export function MusicSchool({ node, detector, rate }: Props) {
   }, [node, detector, rate, state]);
   return (
     <Container fluid>
-      <Group justify='center'>
-        {state.notes.map((note) => (
-          <Stack gap="xs">
-            <Text c="grape" ta="center" size="xl" mt="md">
-              {note.note}
-            </Text>
-            <Text c="lime" size="lg" >
-              {note.pitch}Hz
-            </Text>
-          </Stack>
-        ))}
+      <Group justify="center">
+        <Stack gap="xs">
+          <Text c="grape" ta="center" size="xl" mt="md">
+            {state.note}
+          </Text>
+          <Text c="lime" size="lg">
+            {state.pitch}Hz
+          </Text>
+        </Stack>
       </Group>
       <Text c="dimmed" ta="center" size="md" maw={580} mx="auto" mt="sm">
         Waiting for note...
@@ -44,9 +42,7 @@ export function MusicSchool({ node, detector, rate }: Props) {
 
 function reducer(state: State, pitch: number): State {
   const note = Note.fromFreqSharps(pitch);
-  return {
-    notes: state.notes.concat([{ note, pitch }]),
-  };
+  return { note, pitch };
 }
 
 async function findPitch(node: AnalyserNode, detector: Detector, rate: number): Promise<number> {
