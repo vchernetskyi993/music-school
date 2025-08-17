@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from 'react';
 import { PitchDetector } from 'pitchy';
-import { Container, Loader, Text } from '@mantine/core';
+import { Note } from 'tonal';
+import { Container, Group, Loader, Stack, Text } from '@mantine/core';
 
 type Detector = PitchDetector<Float32Array<ArrayBufferLike>>;
 export type Props = {
@@ -8,12 +9,12 @@ export type Props = {
   detector?: Detector;
   rate?: number;
 };
-type State = { pitches: number[] };
+type State = { notes: { note: string; pitch: number }[] };
 
 const minClarity = 95;
 
 export function MusicSchool({ node, detector, rate }: Props) {
-  const [state, dispatch] = useReducer(reducer, { pitches: [] });
+  const [state, dispatch] = useReducer(reducer, { notes: [] });
   useEffect(() => {
     if (node && detector && rate) {
       findPitch(node, detector, rate).then((pitch) => dispatch(Math.round(pitch)));
@@ -21,9 +22,18 @@ export function MusicSchool({ node, detector, rate }: Props) {
   }, [node, detector, rate, state]);
   return (
     <Container fluid>
-      <Text c="lime" ta="center" size="xl" maw={580} mx="auto" mt="xl">
-        {state.pitches.join(' ')}
-      </Text>
+      <Group justify='center'>
+        {state.notes.map((note) => (
+          <Stack gap="xs">
+            <Text c="grape" ta="center" size="xl" mt="md">
+              {note.note}
+            </Text>
+            <Text c="lime" size="lg" >
+              {note.pitch}Hz
+            </Text>
+          </Stack>
+        ))}
+      </Group>
       <Text c="dimmed" ta="center" size="md" maw={580} mx="auto" mt="sm">
         Waiting for note...
       </Text>
@@ -33,8 +43,9 @@ export function MusicSchool({ node, detector, rate }: Props) {
 }
 
 function reducer(state: State, pitch: number): State {
+  const note = Note.fromFreqSharps(pitch);
   return {
-    pitches: state.pitches.concat([pitch]),
+    notes: state.notes.concat([{ note, pitch }]),
   };
 }
 
@@ -53,10 +64,7 @@ async function findPitch(node: AnalyserNode, detector: Detector, rate: number): 
   return result;
 }
 
-async function averagePitch(
-  initialPitch: number,
-  nextPitch: () => number | null,
-): Promise<number> {
+async function averagePitch(initialPitch: number, nextPitch: () => number | null): Promise<number> {
   const pitches = [];
   let latestPitch: number | null = initialPitch;
   while (latestPitch != null) {

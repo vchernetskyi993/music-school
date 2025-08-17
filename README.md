@@ -1,18 +1,21 @@
-# Mantine Vite template
+# Music School
 
-## Features
+A set of tools to assist with learning a musical instrument.
 
-This template comes with the following features:
+## Learning Tools
 
-- [PostCSS](https://postcss.org/) with [mantine-postcss-preset](https://mantine.dev/styles/postcss-preset)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Storybook](https://storybook.js.org/)
-- [Vitest](https://vitest.dev/) setup with [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
-- ESLint setup with [eslint-config-mantine](https://github.com/mantinedev/eslint-config-mantine)
+- [ ] Visualize instrument sound to UI 
+    - [x] frequency
+    - [x] letter + number
+    - [ ] staff
+- [ ] Games
+    - [ ] note (letter+octave) -> instrument sound
+    - [ ] note (staff) -> instrument sound
+    - [ ] note (digital sound) -> instrument sound
 
-## npm scripts
+## Development
 
-## Build and dev scripts
+### Build and dev scripts
 
 - `dev` – start development server
 - `build` – build production version of the app
@@ -32,19 +35,4 @@ This template comes with the following features:
 - `storybook` – starts storybook dev server
 - `storybook:build` – build production storybook bundle to `storybook-static`
 - `prettier:write` – formats all files with Prettier
-
-## Guitar learning application
-
-### Tooling
-
-* https://github.com/tonaljs/tonal JS music theory
-
-### Visualizer
-
-* Guitar sound to UI (frequency, letter + number, staff)
-
-### Games
-
-* App shows note in octave (letter + number, staff) -> validates instrument note recorded by micro
-* App plays note -> validates same note recorded by micro
 
