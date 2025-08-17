@@ -37,7 +37,6 @@ This template comes with the following features:
 
 ### Tooling
 
-* https://github.com/ianprime0509/pitchy JS pitch detector
 * https://github.com/tonaljs/tonal JS music theory
 
 ### Visualizer
