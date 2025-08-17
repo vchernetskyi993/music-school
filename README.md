@@ -1,6 +1,6 @@
 # Music School
 
-A set of tools to assist with learning a musical instrument.
+A set of tools to assist with learning a musical instrument (including human voice).
 
 ## Learning Tools
 
