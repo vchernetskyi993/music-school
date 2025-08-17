@@ -4,14 +4,16 @@ A set of tools to assist with learning a musical instrument (including human voi
 
 ## Learning Tools
 
-- [ ] Visualize instrument sound to UI 
+- [ ] Visualize Notes
     - [x] frequency
     - [x] letter + number
     - [ ] staff
-- [ ] Games
+- [ ] Study Notes
     - [ ] note (letter+octave) -> instrument sound
     - [ ] note (staff) -> instrument sound
     - [ ] note (digital sound) -> instrument sound
+- [ ] Study Intervals
+- [ ] Study Chords
 
 ## Development
 
