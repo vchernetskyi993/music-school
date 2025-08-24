@@ -2,8 +2,12 @@
 
 A set of tools to assist with learning a musical instrument (including human voice).
 
-## Learning Tools
+For usage and feature list refer to the [introduction page](https://vchernetskyi993.github.io/music-school/).
 
+## Roadmap
+
+- [x] Github Pages
+- [ ] Github Actions
 - [ ] Visualize Notes
     - [x] frequency
     - [x] letter + number
