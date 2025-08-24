@@ -7,7 +7,7 @@ export function Intro() {
     <Stack gap="sm">
       <Title order={1}>{pages.intro.label}</Title>
       <Text>Welcome to Music Shool application.</Text>
-      <Title order={2}>Available Tools:</Title>
+      <Title order={3}>Available Tools:</Title>
       <List withPadding>
         <ListItem>
           <Link to={pages.visualize.to}>{pages.visualize.label}</Link> - verify that application captures pitch of

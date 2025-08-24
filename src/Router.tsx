@@ -3,18 +3,20 @@ import App from './App';
 import { Intro } from './components/Intro';
 import { HomePage } from './pages/Home.page';
 
+export const basePath = '/music-school'
+
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <App />,
+    path: basePath,
+    Component: App,
     children: [
       {
         index: true,
-        element: <Intro />,
+        Component: Intro,
       },
       {
-        path: '/visualize',
-        element: <HomePage />,
+        path: 'visualize',
+        Component: HomePage,
       },
     ],
   },
