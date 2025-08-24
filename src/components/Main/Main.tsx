@@ -13,7 +13,7 @@ type State = { note: string; pitch: number };
 
 const minClarity = 95;
 
-export function MusicSchool({ node, detector, rate }: Props) {
+export function NoteVisualizer({ node, detector, rate }: Props) {
   const [state, dispatch] = useReducer(reducer, { note: 'C4', pitch: 263 });
   useEffect(() => {
     if (node && detector && rate) {

@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
 import { PitchDetector } from 'pitchy';
-import { useMantineColorScheme } from '@mantine/core';
-import { Props as MainProps, MusicSchool } from '../components/Main/Main';
+import { Props as MainProps, NoteVisualizer } from '../components/Main/Main';
 
 export function HomePage() {
-  const { setColorScheme } = useMantineColorScheme();
-  setColorScheme('dark');
   const [state, setState] = useState<MainProps>({});
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -18,5 +15,5 @@ export function HomePage() {
     });
   }, []);
 
-  return <MusicSchool node={state.node} detector={state.detector} rate={state.rate} />;
+  return <NoteVisualizer node={state.node} detector={state.detector} rate={state.rate} />;
 }
