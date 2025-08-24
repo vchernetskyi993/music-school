@@ -6,7 +6,7 @@ import { delay } from './async';
 
 export type NoteSound = { note: string; pitch: number };
 
-const minClarity = 95;
+const minClarity = 80;
 
 export function useNoteSound(
   opts: { defaultNote: NoteSound | null } = { defaultNote: null }
