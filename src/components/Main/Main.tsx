@@ -40,7 +40,7 @@ export function NoteVisualizer({ node, detector, rate }: Props) {
   );
 }
 
-function reducer(state: State, pitch: number): State {
+function reducer(_state: State, pitch: number): State {
   const note = Note.fromFreqSharps(pitch);
   return { note, pitch };
 }
@@ -76,7 +76,7 @@ function singlePitch(node: AnalyserNode, detector: Detector, rate: number): numb
   node.getFloatTimeDomainData(input);
   const [pitch, clarity] = detector.findPitch(input, rate);
   // console.log(`Pitch: ${pitch}, Clarity: ${clarity}`);
-  if (pitch == 0 || clarity * 100 <= minClarity) {
+  if (pitch === 0 || clarity * 100 <= minClarity) {
     return null;
   }
   return pitch;
