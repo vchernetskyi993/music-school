@@ -1,46 +1,28 @@
 import { useEffect, useReducer } from 'react';
-import { PitchDetector } from 'pitchy';
+import { useOutletContext } from 'react-router-dom';
 import { Note } from 'tonal';
-import { Container, Group, Loader, Stack, Text } from '@mantine/core';
+import { ContextType, Detector } from '@/App';
+import { delay } from './async';
 
-type Detector = PitchDetector<Float32Array<ArrayBufferLike>>;
-export type Props = {
-  node?: AnalyserNode;
-  detector?: Detector;
-  rate?: number;
-};
-type State = { note: string; pitch: number };
+export type NoteSound = { note: string; pitch: number };
 
 const minClarity = 95;
 
-export function NoteVisualizer({ node, detector, rate }: Props) {
-  const [state, dispatch] = useReducer(reducer, { note: 'C4', pitch: 263 });
+export function useNoteSound(
+  opts: { defaultNote: NoteSound | null } = { defaultNote: null }
+): NoteSound | null {
+  const context = useOutletContext<ContextType | null>();
+  const [state, dispatch] = useReducer(reducer, opts.defaultNote);
   useEffect(() => {
-    if (node && detector && rate) {
+    if (context) {
+      const { node, detector, rate } = context;
       findPitch(node, detector, rate).then((pitch) => dispatch(Math.round(pitch)));
     }
-  }, [node, detector, rate, state]);
-  return (
-    <Container fluid>
-      <Group justify="center">
-        <Stack gap="xs">
-          <Text c="grape" ta="center" size="xl" mt="md">
-            {state.note}
-          </Text>
-          <Text c="lime" size="lg">
-            {state.pitch}Hz
-          </Text>
-        </Stack>
-      </Group>
-      <Text c="dimmed" ta="center" size="md" maw={580} mx="auto" mt="sm">
-        Waiting for note...
-      </Text>
-      <Loader color="blue" type="dots" mx="auto" />
-    </Container>
-  );
+  }, [context, state]);
+  return state;
 }
 
-function reducer(_state: State, pitch: number): State {
+function reducer(_state: NoteSound | null, pitch: number): NoteSound {
   const note = Note.fromFreqSharps(pitch);
   return { note, pitch };
 }
@@ -80,8 +62,4 @@ function singlePitch(node: AnalyserNode, detector: Detector, rate: number): numb
     return null;
   }
   return pitch;
-}
-
-async function delay(millis: number) {
-  await new Promise<void>((resolve) => setTimeout(resolve, millis));
 }

@@ -7,13 +7,13 @@ For usage and feature list refer to the [introduction page](https://vchernetskyi
 ## Roadmap
 
 - [x] Github Pages
-- [ ] Github Actions
+- [x] Github Actions
 - [ ] Visualize Notes
     - [x] frequency
     - [x] letter + number
     - [ ] staff
 - [ ] Study Notes
-    - [ ] note (letter+octave) -> instrument sound
+    - [x] note (letter+octave) -> instrument sound
     - [ ] note (staff) -> instrument sound
     - [ ] note (digital sound) -> instrument sound
 - [ ] Study Intervals
@@ -31,10 +31,8 @@ For usage and feature list refer to the [introduction page](https://vchernetskyi
 
 - `typecheck` – checks TypeScript types
 - `lint` – runs ESLint
-- `prettier:check` – checks files with Prettier
-- `vitest` – runs vitest tests
-- `vitest:watch` – starts vitest watch
-- `test` – runs `vitest`, `prettier:check`, `lint` and `typecheck` scripts
+- `prettier` – checks files with Prettier
+- `verify` - runs all available checks
 
 ### Other scripts
 

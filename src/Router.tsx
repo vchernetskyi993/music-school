@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import { Intro } from './components/Intro';
-import { HomePage } from './pages/Home.page';
+import { Notes } from './components/Notes';
+import { Visualizer } from './components/Visualizer';
 
 export const basePath = '/music-school';
 
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'visualize',
-        Component: HomePage,
+        Component: Visualizer,
+      },
+      {
+        path: 'notes',
+        Component: Notes,
       },
     ],
   },

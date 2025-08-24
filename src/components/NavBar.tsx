@@ -21,9 +21,10 @@ class Link {
 export const pages: { [key: string]: Link } = {
   intro: new Link('/', 'Introduction'),
   visualize: new Link('/visualize', 'Visualize Note'),
+  studyNotes: new Link('/notes', 'Study Notes'),
 };
 
-const links = [pages.intro, pages.visualize];
+const links = [pages.intro, pages.visualize, pages.studyNotes];
 
 export function NavBar({ toggle }: { toggle: () => void }) {
   const navigate = useNavigate();

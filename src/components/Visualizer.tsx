@@ -1,0 +1,24 @@
+import { Container, Group, Loader, Stack, Text } from '@mantine/core';
+import { useNoteSound } from '@/helpers/pitch';
+
+export function Visualizer() {
+  const sound = useNoteSound({ defaultNote: { note: 'C4', pitch: 263 } });
+  return (
+    <Container fluid>
+      <Group justify="center">
+        <Stack gap="xs">
+          <Text c="grape" ta="center" size="xl" mt="md">
+            {sound!.note}
+          </Text>
+          <Text c="lime" size="lg">
+            {sound!.pitch}Hz
+          </Text>
+        </Stack>
+      </Group>
+      <Text c="dimmed" ta="center" size="md" maw={580} mx="auto" mt="sm">
+        Waiting for note...
+      </Text>
+      <Loader color="blue" type="dots" mx="auto" />
+    </Container>
+  );
+}
