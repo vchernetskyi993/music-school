@@ -10,8 +10,8 @@ export function Intro() {
       <Title order={3}>Available Tools:</Title>
       <List withPadding>
         <ListItem>
-          <Link to={pages.visualize.to}>{pages.visualize.label}</Link> - verify that application captures pitch of
-          your instrument correctly
+          <Link to={pages.visualize.to}>{pages.visualize.label}</Link> - verify that application
+          captures pitch of your instrument correctly
         </ListItem>
       </List>
     </Stack>

@@ -3,7 +3,7 @@ import App from './App';
 import { Intro } from './components/Intro';
 import { HomePage } from './pages/Home.page';
 
-export const basePath = '/music-school'
+export const basePath = '/music-school';
 
 const router = createBrowserRouter([
   {
