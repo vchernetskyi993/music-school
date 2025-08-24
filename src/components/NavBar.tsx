@@ -9,8 +9,8 @@ class Link {
   readonly label: string;
 
   constructor(to: string, label: string) {
-    this._to = to
-    this.label = label
+    this._to = to;
+    this.label = label;
   }
 
   get to() {
@@ -18,7 +18,7 @@ class Link {
   }
 }
 
-export const pages: {[key: string]: Link} = {
+export const pages: { [key: string]: Link } = {
   intro: new Link('/', 'Introduction'),
   visualize: new Link('/visualize', 'Visualize Note'),
 };
@@ -34,17 +34,15 @@ export function NavBar() {
 
   return (
     <AppShell.Navbar p="md">
-      {links.map((link) => {
-        return (
-          <NavLink
-            href={link.to}
-            label={link.label}
-            variant="subtle"
-            active={!!useMatch(link.to)}
-            onClick={navigateAction(link.to)}
-          />
-        );
-      })}
+      {links.map((link) => (
+        <NavLink
+          href={link.to}
+          label={link.label}
+          variant="subtle"
+          active={!!useMatch(link.to)}
+          onClick={navigateAction(link.to)}
+        />
+      ))}
     </AppShell.Navbar>
   );
 }
