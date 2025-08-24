@@ -25,11 +25,12 @@ export const pages: { [key: string]: Link } = {
 
 const links = [pages.intro, pages.visualize];
 
-export function NavBar() {
+export function NavBar({ toggle }: { toggle: () => void }) {
   const navigate = useNavigate();
   const navigateAction = (route: string) => (event: ME) => {
     event.preventDefault();
     navigate(route);
+    toggle();
   };
 
   return (

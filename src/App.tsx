@@ -25,7 +25,7 @@ export default function App() {
             <Title>Music School</Title>
           </Group>
         </AppShell.Header>
-        <NavBar />
+        <NavBar toggle={toggle} />
         <AppShell.Main>
           <Outlet />
         </AppShell.Main>
