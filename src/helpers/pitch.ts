@@ -57,7 +57,7 @@ function singlePitch(node: AnalyserNode, detector: Detector, rate: number): numb
   const input = new Float32Array(detector.inputLength);
   node.getFloatTimeDomainData(input);
   const [pitch, clarity] = detector.findPitch(input, rate);
-  // console.log(`Pitch: ${pitch}, Clarity: ${clarity}`);
+  console.log(`Pitch: ${pitch}, Clarity: ${clarity}`);
   if (pitch === 0 || clarity * 100 <= minClarity) {
     return null;
   }
