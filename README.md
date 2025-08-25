@@ -9,7 +9,6 @@ For usage and feature list refer to the [introduction page](https://vchernetskyi
 - [x] Github Pages
     - [x] Direct access to subpath
 - [x] Github Actions
-- [ ] Mobile pitch detection support
 - [ ] Visualize Notes
     - [x] frequency
     - [x] letter + number
