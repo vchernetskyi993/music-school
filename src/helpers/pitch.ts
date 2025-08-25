@@ -5,9 +5,25 @@ import { ContextType, Detector } from '@/App';
 import { delay } from './async';
 import { median } from './math';
 
-export type NoteSound = { note: string; pitch: number };
+export type NoteSound = { note: string; frequency: number };
 
-const minClarity = 80;
+const config = {
+  /**
+   * Time in milliseconds to wait between pitch capture attempts.
+   */
+  captureDelay: 50,
+
+  /**
+   * Maximum time in milliseconds to produce note sound from received pitches.
+   */
+  maxWait: 500,
+
+  /**
+   * Minimum pitch clarity to consider for frequency detection.
+   * Valid range: 0-100.
+   */
+  minClarity: 80,
+};
 
 export function useNoteSound(
   opts: { defaultNote: NoteSound | null } = { defaultNote: null }
@@ -17,28 +33,33 @@ export function useNoteSound(
   useEffect(() => {
     if (context) {
       const { node, detector, rate } = context;
-      findPitch(node, detector, rate).then((pitch) => dispatch(Math.round(pitch)));
+      captureFrequency(node, detector, rate).then((frequency) => dispatch(Math.round(frequency)));
     }
   }, [context, state]);
   return state;
 }
 
-function reducer(_state: NoteSound | null, pitch: number): NoteSound {
-  const note = Note.fromFreqSharps(pitch);
-  return { note, pitch };
+function reducer(_state: NoteSound | null, frequency: number): NoteSound {
+  const note = Note.fromFreqSharps(frequency);
+  return { note, frequency };
 }
 
-async function findPitch(node: AnalyserNode, detector: Detector, rate: number): Promise<number> {
+async function captureFrequency(
+  node: AnalyserNode,
+  detector: Detector,
+  rate: number
+): Promise<number> {
   const nextPitch = () => singlePitch(node, detector, rate);
   let result: number | null = null;
   while (result == null) {
-    await delay(50);
+    await delay(config.captureDelay);
     const pitch = nextPitch();
     if (pitch == null) {
       result = pitch;
       continue;
     }
     result = await approximatePitch(pitch, nextPitch);
+    console.log(`Approximate pitch: ${result}`);
   }
   return result;
 }
@@ -49,9 +70,11 @@ async function approximatePitch(
 ): Promise<number> {
   const pitches = [];
   let latestPitch: number | null = initialPitch;
-  while (latestPitch != null) {
+  let waitedFor = 0;
+  while (latestPitch != null && waitedFor < config.maxWait) {
     pitches.push(latestPitch);
-    await delay(50);
+    await delay(config.captureDelay);
+    waitedFor += config.captureDelay;
     latestPitch = nextPitch();
   }
   return median(pitches);
@@ -62,7 +85,7 @@ function singlePitch(node: AnalyserNode, detector: Detector, rate: number): numb
   node.getFloatTimeDomainData(input);
   const [pitch, clarity] = detector.findPitch(input, rate);
   console.log(`Pitch: ${pitch}, Clarity: ${clarity}`);
-  if (pitch === 0 || clarity * 100 <= minClarity) {
+  if (pitch === 0 || clarity * 100 <= config.minClarity) {
     return null;
   }
   return pitch;
