@@ -32,7 +32,9 @@ export function useSound(opts: Opts): number | undefined {
   useEffect(() => {
     if (context) {
       const { node, detector, rate } = context;
-      captureFrequency(node, detector, rate, opts.step!).then(setFrequency);
+      captureFrequency(node, detector, rate, opts.step!).then((captured) =>
+        setFrequency(Math.round(captured * 100) / 100)
+      );
     }
   }, [context, frequency]);
   return frequency;
