@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { Note } from 'tonal';
 import { Container, Divider, Group, Loader, Stack, Text } from '@mantine/core';
 import { delay } from '@/helpers/async';
+import { frequencyDiff, nextNote } from '@/helpers/music';
 import { useNoteSound } from '@/helpers/pitch';
 
 export function Notes() {
   const [expected, setExpected] = useState<string>(randomNote());
-  const sound = useNoteSound();
+  const sound = useNoteSound({ step: frequencyDiff('E2', nextNote('E2')) });
   useEffect(() => {
     if (sound && sound.note === expected) {
       delay(1000).then(() => setExpected(randomNote()));

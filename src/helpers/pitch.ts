@@ -25,21 +25,23 @@ const config = {
   minClarity: 80,
 };
 
-export function useNoteSound(
-  opts: { defaultNote: NoteSound | null } = { defaultNote: null }
-): NoteSound | null {
+type Opts = { defaultNote?: NoteSound; step: number };
+
+export function useNoteSound(opts: Opts): NoteSound | undefined {
   const context = useOutletContext<ContextType | null>();
   const [state, dispatch] = useReducer(reducer, opts.defaultNote);
   useEffect(() => {
     if (context) {
       const { node, detector, rate } = context;
-      captureFrequency(node, detector, rate).then((frequency) => dispatch(Math.round(frequency)));
+      captureFrequency(node, detector, rate, opts.step!).then((frequency) =>
+        dispatch(Math.round(frequency))
+      );
     }
   }, [context, state]);
   return state;
 }
 
-function reducer(_state: NoteSound | null, frequency: number): NoteSound {
+function reducer(_state: NoteSound | undefined, frequency: number): NoteSound {
   const note = Note.fromFreqSharps(frequency);
   return { note, frequency };
 }
@@ -47,7 +49,8 @@ function reducer(_state: NoteSound | null, frequency: number): NoteSound {
 async function captureFrequency(
   node: AnalyserNode,
   detector: Detector,
-  rate: number
+  rate: number,
+  step: number
 ): Promise<number> {
   const nextPitch = () => singlePitch(node, detector, rate);
   let result: number | null = null;
@@ -58,7 +61,7 @@ async function captureFrequency(
       result = pitch;
       continue;
     }
-    result = await approximatePitch(pitch, nextPitch);
+    result = await approximatePitch(pitch, step, nextPitch);
     console.log(`Approximate pitch: ${result}`);
   }
   return result;
@@ -66,12 +69,19 @@ async function captureFrequency(
 
 async function approximatePitch(
   initialPitch: number,
+  step: number,
   nextPitch: () => number | null
 ): Promise<number> {
-  const pitches = [];
+  const pitches: number[] = [];
   let latestPitch: number | null = initialPitch;
   let waitedFor = 0;
-  while (latestPitch != null && waitedFor < config.maxWait) {
+  const isSameNote = () => {
+    return (
+      pitches.length === 0 ||
+      (!!latestPitch && Math.abs(pitches[pitches.length - 1] - latestPitch) <= step)
+    );
+  };
+  while (latestPitch != null && isSameNote() && waitedFor < config.maxWait) {
     pitches.push(latestPitch);
     await delay(config.captureDelay);
     waitedFor += config.captureDelay;
