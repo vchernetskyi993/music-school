@@ -16,7 +16,7 @@ For usage and feature list refer to the [introduction page](https://vchernetskyi
     - [ ] staff
 - [ ] Study Notes
     - [x] note (letter+octave) -> instrument sound
-        - [ ] sharps & flats
+        - [x] sharps & flats
         - [ ] set note range
     - [ ] note (staff) -> instrument sound
     - [ ] note (digital sound) -> instrument sound

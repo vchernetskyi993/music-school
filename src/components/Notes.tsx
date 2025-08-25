@@ -38,7 +38,9 @@ export function Notes() {
 }
 
 function randomNote(): string {
-  return Note.fromFreqSharps(randomInt(Note.get('E2').freq!, Note.get('E5').freq!));
+  const noteFromFreq = Math.round(Math.random()) ? Note.fromFreqSharps : Note.fromFreq;
+  const frequency = randomInt(Note.get('E2').freq!, Note.get('E5').freq!);
+  return noteFromFreq(frequency);
 }
 
 function randomInt(min: number, max: number): number {
