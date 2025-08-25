@@ -1,22 +1,22 @@
+import { Note } from 'tonal';
 import { Container, Group, Loader, Stack, Text } from '@mantine/core';
-import { Altered, frequencyDiff, nextNote } from '@/helpers/music';
-import { useNoteSound } from '@/helpers/pitch';
+import { frequencyDiff, nextNote } from '@/helpers/music';
+import { useSound } from '@/helpers/pitch';
 
 export function Visualizer() {
-  const sound = useNoteSound({
-    defaultNote: { note: 'C4', frequency: 263 },
+  const sound = useSound({
+    defaultFrequency: 263,
     step: frequencyDiff('E2', nextNote('E2')),
-    altered: Altered.Sharp,
   });
   return (
     <Container fluid>
       <Group justify="center">
         <Stack gap="xs">
           <Text c="grape" ta="center" size="xl" mt="md">
-            {sound!.note}
+            {Note.fromFreqSharps(sound!)}
           </Text>
           <Text c="lime" size="lg">
-            {sound!.frequency}Hz
+            {sound}Hz
           </Text>
         </Stack>
       </Group>

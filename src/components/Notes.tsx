@@ -3,18 +3,25 @@ import { Note } from 'tonal';
 import { Container, Divider, Group, Loader, Stack, Text } from '@mantine/core';
 import { delay } from '@/helpers/async';
 import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/helpers/music';
-import { useNoteSound } from '@/helpers/pitch';
+import { useSound } from '@/helpers/pitch';
 
 type State = { expected: string; altered: Altered };
 
 export function Notes() {
+  const [matched, setMatched] = useState<boolean>(false);
   const [state, setState] = useState<State>(freshState());
-  const sound = useNoteSound({ step: frequencyDiff('E2', nextNote('E2')), altered: state.altered });
+  const sound = useSound({ step: frequencyDiff('E2', nextNote('E2')) });
+  const actual = sound ? noteFromFrequency(sound, state.altered) : '';
   useEffect(() => {
-    if (sound && sound.note === state.expected) {
-      delay(1000).then(() => setState(freshState()));
+    if (!matched && actual === state.expected) {
+      console.log(`State is expected: ${state.expected}`);
+      setMatched(true);
+      delay(1000).then(() => {
+        setState(freshState(state.expected));
+        setMatched(false);
+      });
     }
-  });
+  }, [actual]);
   return (
     <Container fluid>
       <Stack gap="xs">
@@ -25,14 +32,14 @@ export function Notes() {
         </Group>
         <Divider size="md" />
         <Text
-          c={sound ? (sound.note === state.expected ? 'green' : 'red') : 'dimmed'}
+          c={sound ? (matched ? 'green' : 'red') : 'dimmed'}
           ta="center"
           size={sound ? 'xl' : 'md'}
           maw={580}
           mx="auto"
           mt="sm"
         >
-          {sound ? sound.note : 'Waiting for note...'}
+          {actual || 'Waiting for note...'}
         </Text>
         <Loader color="blue" type="dots" mx="auto" />
       </Stack>
@@ -40,9 +47,13 @@ export function Notes() {
   );
 }
 
-function freshState(): State {
+function freshState(previous?: string): State {
   const altered = Math.round(Math.random());
-  return { altered, expected: randomNote(altered) };
+  const note = randomNote(altered);
+  if (note === previous) {
+    return freshState(previous);
+  }
+  return { altered, expected: note };
 }
 
 function randomNote(altered: Altered): string {
