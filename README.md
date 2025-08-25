@@ -7,13 +7,17 @@ For usage and feature list refer to the [introduction page](https://vchernetskyi
 ## Roadmap
 
 - [x] Github Pages
+    - [x] Direct access to subpath
 - [x] Github Actions
+- [ ] Mobile pitch detection support
 - [ ] Visualize Notes
     - [x] frequency
     - [x] letter + number
     - [ ] staff
 - [ ] Study Notes
     - [x] note (letter+octave) -> instrument sound
+        - [ ] sharps & flats
+        - [ ] set note range
     - [ ] note (staff) -> instrument sound
     - [ ] note (digital sound) -> instrument sound
 - [ ] Study Intervals

@@ -1,27 +1,13 @@
 import { useMatch, useNavigate } from 'react-router-dom';
 import { AppShell, NavLink } from '@mantine/core';
-import { basePath } from '@/Router';
 
 type ME = React.MouseEvent<HTMLAnchorElement, MouseEvent>;
-
-class Link {
-  private readonly _to: string;
-  readonly label: string;
-
-  constructor(to: string, label: string) {
-    this._to = to;
-    this.label = label;
-  }
-
-  get to() {
-    return `${basePath}${this._to}`;
-  }
-}
+type Link = { to: string; label: string };
 
 export const pages: { [key: string]: Link } = {
-  intro: new Link('/', 'Introduction'),
-  visualize: new Link('/visualize', 'Visualize Note'),
-  studyNotes: new Link('/notes', 'Study Notes'),
+  intro: { to: '/', label: 'Introduction' },
+  visualize: { to: '/visualize', label: 'Visualize Note' },
+  studyNotes: { to: '/notes', label: 'Study Notes' },
 };
 
 const links = [pages.intro, pages.visualize, pages.studyNotes];
