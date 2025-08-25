@@ -10,8 +10,8 @@ export function Intro() {
       <Title order={3}>Available Tools:</Title>
       <List withPadding>
         <ListItem>
-          <Link to={pages.visualize.to}>{pages.visualize.label}</Link> - displays on the screen note
-          played. Useful to verify that application is operational and if needed to tune your
+          <Link to={pages.visualize.to}>{pages.visualize.label}</Link> - displays played note on the
+          screen. Useful to verify that application is operational and, if needed, to tune your
           instrument.
         </ListItem>
         <ListItem>
