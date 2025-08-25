@@ -1,8 +1,8 @@
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
-import { Intro } from './components/Intro';
-import { Notes } from './components/Notes';
-import { Visualizer } from './components/Visualizer';
+import { Intro } from './pages/Intro.page';
+import { Notes } from './pages/Notes.page';
+import { Visualizer } from './pages/Visualizer.page';
 
 const router = createHashRouter([
   {

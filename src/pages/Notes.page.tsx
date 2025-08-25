@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Note } from 'tonal';
 import { Container, Divider, Group, Loader, Stack, Text } from '@mantine/core';
+import { NoteInput } from '@/components/NoteInput';
 import { delay } from '@/helpers/async';
 import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/helpers/music';
 import { useSound } from '@/helpers/pitch';
@@ -9,15 +10,18 @@ type State = { expected: string; altered: Altered };
 
 export function Notes() {
   const [matched, setMatched] = useState<boolean>(false);
-  const [state, setState] = useState<State>(freshState());
-  const sound = useSound({ step: frequencyDiff('E2', nextNote('E2')) });
+  const [from, setFrom] = useState('E2');
+  const [to, setTo] = useState('E5');
+  const [state, setState] = useState<State>(() => freshState(from, to));
+  const refresh = () => setState(freshState(from, to, state.expected));
+  const sound = useSound({ step: frequencyDiff(from, nextNote(from)) });
   const actual = sound ? noteFromFrequency(sound, state.altered) : '';
   useEffect(() => {
     if (!matched && actual === state.expected) {
-      console.log(`State is expected: ${state.expected}`);
+      // console.log(`State is expected: ${state.expected}`);
       setMatched(true);
       delay(1000).then(() => {
-        setState(freshState(state.expected));
+        refresh();
         setMatched(false);
       });
     }
@@ -25,6 +29,24 @@ export function Notes() {
   return (
     <Container fluid>
       <Stack gap="xs">
+        <Group justify="center">
+          <NoteInput
+            label="From:"
+            note={from}
+            setNote={setFrom}
+            validation={(newFrom) => Note.get(newFrom).freq! > Note.get(to).freq!}
+            validationError="From should be lower than to"
+            refresh={refresh}
+          />
+          <NoteInput
+            label="To:"
+            note={to}
+            setNote={setTo}
+            validation={(newTo) => Note.get(newTo).freq! < Note.get(from).freq!}
+            validationError="To should be higher than from"
+            refresh={refresh}
+          />
+        </Group>
         <Group justify="center">
           <Text c="grape" ta="center" size="xl" mt="md">
             {state.expected}
@@ -47,17 +69,17 @@ export function Notes() {
   );
 }
 
-function freshState(previous?: string): State {
+function freshState(from: string, to: string, previous?: string): State {
   const altered = Math.round(Math.random());
-  const note = randomNote(altered);
+  const note = randomNote(from, to, altered);
   if (note === previous) {
-    return freshState(previous);
+    return freshState(from, to, previous);
   }
   return { altered, expected: note };
 }
 
-function randomNote(altered: Altered): string {
-  const frequency = randomInt(Note.get('E2').freq!, Note.get('E5').freq!);
+function randomNote(from: string, to: string, altered: Altered): string {
+  const frequency = randomInt(Note.get(from).freq!, Note.get(to).freq!);
   return noteFromFrequency(frequency, altered);
 }
 

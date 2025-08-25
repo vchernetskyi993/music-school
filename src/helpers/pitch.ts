@@ -56,7 +56,7 @@ async function captureFrequency(
       continue;
     }
     result = await approximatePitch(pitch, step, nextPitch);
-    console.log(`Approximate pitch: ${result}`);
+    // console.log(`Approximate pitch: ${result}`);
   }
   return result;
 }
@@ -88,7 +88,7 @@ function singlePitch(node: AnalyserNode, detector: Detector, rate: number): numb
   const input = new Float32Array(detector.inputLength);
   node.getFloatTimeDomainData(input);
   const [pitch, clarity] = detector.findPitch(input, rate);
-  console.log(`Pitch: ${pitch}, Clarity: ${clarity}`);
+  // console.log(`Pitch: ${pitch}, Clarity: ${clarity}`);
   if (pitch === 0 || clarity * 100 <= config.minClarity) {
     return null;
   }
