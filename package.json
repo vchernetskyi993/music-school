@@ -16,7 +16,7 @@
     "prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
     "vitest": "vitest run",
     "vitest:watch": "vitest",
-    "verify": "npm run prettier && npm run lint && npm run typecheck",
+    "verify": "npm run prettier && npm run lint && npm run typecheck && npm run vitest",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build"
   },

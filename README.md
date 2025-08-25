@@ -25,22 +25,20 @@ For usage and feature list refer to the [introduction page](https://vchernetskyi
 
 ## Development
 
-### Build and dev scripts
+### Build and Deploy
 
 - `dev` – start development server
 - `build` – build production version of the app
 - `preview` – locally preview production build
+- `deploy` - deploy to production
 
-### Testing scripts
+### Code Quality
 
 - `typecheck` – checks TypeScript types
 - `lint` – runs ESLint
 - `prettier` – checks files with Prettier
+- `vitest` - runs tests
 - `verify` - runs all available checks
-
-### Other scripts
-
-- `storybook` – starts storybook dev server
-- `storybook:build` – build production storybook bundle to `storybook-static`
+    - It is recommended to run `verify` before each commit
 - `prettier:write` – formats all files with Prettier
 

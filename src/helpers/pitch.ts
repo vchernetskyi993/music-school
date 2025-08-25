@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import { Note } from 'tonal';
 import { ContextType, Detector } from '@/App';
 import { delay } from './async';
+import { median } from './math';
 
 export type NoteSound = { note: string; pitch: number };
 
@@ -37,12 +38,15 @@ async function findPitch(node: AnalyserNode, detector: Detector, rate: number): 
       result = pitch;
       continue;
     }
-    result = await averagePitch(pitch, nextPitch);
+    result = await approximatePitch(pitch, nextPitch);
   }
   return result;
 }
 
-async function averagePitch(initialPitch: number, nextPitch: () => number | null): Promise<number> {
+async function approximatePitch(
+  initialPitch: number,
+  nextPitch: () => number | null
+): Promise<number> {
   const pitches = [];
   let latestPitch: number | null = initialPitch;
   while (latestPitch != null) {
@@ -50,7 +54,7 @@ async function averagePitch(initialPitch: number, nextPitch: () => number | null
     await delay(50);
     latestPitch = nextPitch();
   }
-  return pitches.reduce((a, b) => a + b) / pitches.length;
+  return median(pitches);
 }
 
 function singlePitch(node: AnalyserNode, detector: Detector, rate: number): number | null {
