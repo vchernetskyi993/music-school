@@ -1,11 +1,12 @@
 import { Container, Group, Loader, Stack, Text } from '@mantine/core';
-import { frequencyDiff, nextNote } from '@/helpers/music';
+import { Altered, frequencyDiff, nextNote } from '@/helpers/music';
 import { useNoteSound } from '@/helpers/pitch';
 
 export function Visualizer() {
   const sound = useNoteSound({
     defaultNote: { note: 'C4', frequency: 263 },
     step: frequencyDiff('E2', nextNote('E2')),
+    altered: Altered.Sharp,
   });
   return (
     <Container fluid>

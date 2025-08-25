@@ -2,15 +2,17 @@ import { useEffect, useState } from 'react';
 import { Note } from 'tonal';
 import { Container, Divider, Group, Loader, Stack, Text } from '@mantine/core';
 import { delay } from '@/helpers/async';
-import { frequencyDiff, nextNote } from '@/helpers/music';
+import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/helpers/music';
 import { useNoteSound } from '@/helpers/pitch';
 
+type State = { expected: string; altered: Altered };
+
 export function Notes() {
-  const [expected, setExpected] = useState<string>(randomNote());
-  const sound = useNoteSound({ step: frequencyDiff('E2', nextNote('E2')) });
+  const [state, setState] = useState<State>(freshState());
+  const sound = useNoteSound({ step: frequencyDiff('E2', nextNote('E2')), altered: state.altered });
   useEffect(() => {
-    if (sound && sound.note === expected) {
-      delay(1000).then(() => setExpected(randomNote()));
+    if (sound && sound.note === state.expected) {
+      delay(1000).then(() => setState(freshState()));
     }
   });
   return (
@@ -18,12 +20,12 @@ export function Notes() {
       <Stack gap="xs">
         <Group justify="center">
           <Text c="grape" ta="center" size="xl" mt="md">
-            {expected}
+            {state.expected}
           </Text>
         </Group>
         <Divider size="md" />
         <Text
-          c={sound ? (sound.note === expected ? 'green' : 'red') : 'dimmed'}
+          c={sound ? (sound.note === state.expected ? 'green' : 'red') : 'dimmed'}
           ta="center"
           size={sound ? 'xl' : 'md'}
           maw={580}
@@ -38,10 +40,14 @@ export function Notes() {
   );
 }
 
-function randomNote(): string {
-  const noteFromFreq = Math.round(Math.random()) ? Note.fromFreqSharps : Note.fromFreq;
+function freshState(): State {
+  const altered = Math.round(Math.random());
+  return { altered, expected: randomNote(altered) };
+}
+
+function randomNote(altered: Altered): string {
   const frequency = randomInt(Note.get('E2').freq!, Note.get('E5').freq!);
-  return noteFromFreq(frequency);
+  return noteFromFrequency(frequency, altered);
 }
 
 function randomInt(min: number, max: number): number {

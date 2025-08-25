@@ -1,9 +1,9 @@
 import { useEffect, useReducer } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { Note } from 'tonal';
 import { ContextType, Detector } from '@/App';
 import { delay } from './async';
 import { median } from './math';
+import { Altered, noteFromFrequency } from './music';
 
 export type NoteSound = { note: string; frequency: number };
 
@@ -25,7 +25,8 @@ const config = {
   minClarity: 80,
 };
 
-type Opts = { defaultNote?: NoteSound; step: number };
+type Opts = { defaultNote?: NoteSound; step: number; altered: Altered };
+type Event = { frequency: number; altered: Altered };
 
 export function useNoteSound(opts: Opts): NoteSound | undefined {
   const context = useOutletContext<ContextType | null>();
@@ -34,16 +35,15 @@ export function useNoteSound(opts: Opts): NoteSound | undefined {
     if (context) {
       const { node, detector, rate } = context;
       captureFrequency(node, detector, rate, opts.step!).then((frequency) =>
-        dispatch(Math.round(frequency))
+        dispatch({ frequency: Math.round(frequency), altered: opts.altered })
       );
     }
   }, [context, state]);
   return state;
 }
 
-function reducer(_state: NoteSound | undefined, frequency: number): NoteSound {
-  const note = Note.fromFreqSharps(frequency);
-  return { note, frequency };
+function reducer(_state: NoteSound | undefined, event: Event): NoteSound {
+  return { note: noteFromFrequency(event.frequency, event.altered), frequency: event.frequency };
 }
 
 async function captureFrequency(
