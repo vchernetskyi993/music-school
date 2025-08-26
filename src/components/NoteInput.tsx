@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Note } from 'tonal';
-import { Input, Text } from '@mantine/core';
+import { Text, TextInput } from '@mantine/core';
 
 export function NoteInput({
   label,
@@ -36,10 +36,14 @@ export function NoteInput({
   return (
     <>
       <Text>{label}</Text>
-      <Input
+      <TextInput
+        styles={{
+          input: { textAlign: 'center' },
+        }}
         value={note}
+        // TODO: move text to popover component
         error={error}
-        maw={50}
+        maw={55}
         onChange={(event) => {
           const newNote = event.currentTarget.value;
           const error = validate(newNote);
