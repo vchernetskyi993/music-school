@@ -34,7 +34,8 @@ export function Notes() {
             label="From:"
             note={from}
             setNote={setFrom}
-            validation={(newFrom) => Note.get(newFrom).freq! > Note.get(to).freq!}
+            pairNote={to}
+            validator={(from, to) => from > to}
             validationError="From should be lower than to"
             refresh={refresh}
           />
@@ -42,7 +43,8 @@ export function Notes() {
             label="To:"
             note={to}
             setNote={setTo}
-            validation={(newTo) => Note.get(newTo).freq! < Note.get(from).freq!}
+            pairNote={from}
+            validator={(to, from) => to < from}
             validationError="To should be higher than from"
             refresh={refresh}
           />

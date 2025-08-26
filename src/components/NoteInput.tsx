@@ -6,14 +6,16 @@ export function NoteInput({
   label,
   note,
   setNote,
-  validation,
+  pairNote,
+  validator,
   validationError,
   refresh,
 }: {
   label: string;
   note: string;
   setNote: (note: string) => void;
-  validation: (note: string) => boolean;
+  pairNote: string;
+  validator: (noteFreq: number, pairNoteFreq: number) => boolean;
   validationError: string;
   refresh: () => void;
 }) {
@@ -23,11 +25,14 @@ export function NoteInput({
     if (!note.freq) {
       return 'Not a note!';
     }
-    if (validation(newTo)) {
+    if (validator(Note.get(newTo).freq!, Note.get(pairNote).freq!)) {
       return validationError;
     }
     return '';
   };
+  useEffect(() => {
+    setError(validate(note));
+  }, [pairNote]);
   useEffect(() => {
     if (!error) {
       refresh();
@@ -47,8 +52,7 @@ export function NoteInput({
             maw={55}
             onChange={(event) => {
               const newNote = event.currentTarget.value;
-              const error = validate(newNote);
-              setError(error);
+              setError(validate(newNote));
               setNote(newNote);
             }}
           />
