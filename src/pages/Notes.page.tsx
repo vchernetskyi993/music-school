@@ -17,7 +17,6 @@ export function Notes() {
   const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
   const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
   const [state, setState] = useState<State>(() => freshState(from, to));
-  useEffect(() => setState(freshState(from, to, state.expected)), [from, to]);
   const refresh = () => setState(freshState(from, to, state.expected));
   useEffect(refresh, [from, to]);
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)) });
