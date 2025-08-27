@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Note } from 'tonal';
 import { Container, Divider, Group, Loader, Stack, Text } from '@mantine/core';
-import { NoteInput } from '@/components/NoteInput';
+import { NoteRange } from '@/components/NoteRange';
 import { delay } from '@/helpers/async';
 import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/helpers/music';
 import { useSound } from '@/helpers/pitch';
 
 type State = { expected: string; altered: Altered };
 
+const defaultFrom = 'E2';
+const defaultTo = 'E5';
+
 export function Notes() {
   const [matched, setMatched] = useState<boolean>(false);
-  const [from, setFrom] = useState('E2');
-  const [to, setTo] = useState('E5');
+  const [from, setFrom] = useState(defaultFrom);
+  const [to, setTo] = useState(defaultTo);
   const [state, setState] = useState<State>(() => freshState(from, to));
+  useEffect(() => setState(freshState(from, to, state.expected)), [from, to]);
   const refresh = () => setState(freshState(from, to, state.expected));
+  useEffect(refresh, [from, to]);
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)) });
   const actual = sound ? noteFromFrequency(sound, state.altered) : '';
   useEffect(() => {
@@ -29,26 +34,7 @@ export function Notes() {
   return (
     <Container fluid>
       <Stack gap="xs">
-        <Group justify="center">
-          <NoteInput
-            label="From:"
-            note={from}
-            setNote={setFrom}
-            pairNote={to}
-            validator={(from, to) => from > to}
-            validationError="From should be lower than to"
-            refresh={refresh}
-          />
-          <NoteInput
-            label="To:"
-            note={to}
-            setNote={setTo}
-            pairNote={from}
-            validator={(to, from) => to < from}
-            validationError="To should be higher than from"
-            refresh={refresh}
-          />
-        </Group>
+        <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
         <Group justify="center">
           <Text c="grape" ta="center" size="xl" mt="md">
             {state.expected}
