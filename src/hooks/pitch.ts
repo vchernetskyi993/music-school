@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { ContextType, Detector } from '@/App';
-import { delay } from './async';
-import { median } from './math';
+import { delay } from '@/helpers/async';
+import { median } from '@/helpers/math';
 
 export type NoteSound = { note: string; frequency: number };
 

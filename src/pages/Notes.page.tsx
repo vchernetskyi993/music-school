@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Note } from 'tonal';
 import { Container, Divider, Group, Loader, Stack, Text } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { NoteRange } from '@/components/NoteRange';
 import { delay } from '@/helpers/async';
 import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/helpers/music';
-import { useSound } from '@/helpers/pitch';
+import { useSound } from '@/hooks/pitch';
 
 type State = { expected: string; altered: Altered };
 
@@ -13,8 +14,8 @@ const defaultTo = 'E5';
 
 export function Notes() {
   const [matched, setMatched] = useState<boolean>(false);
-  const [from, setFrom] = useState(defaultFrom);
-  const [to, setTo] = useState(defaultTo);
+  const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
+  const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
   const [state, setState] = useState<State>(() => freshState(from, to));
   useEffect(() => setState(freshState(from, to, state.expected)), [from, to]);
   const refresh = () => setState(freshState(from, to, state.expected));
