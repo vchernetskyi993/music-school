@@ -6,14 +6,16 @@ export function Intro() {
   return (
     <Stack gap="sm">
       <Title order={1}>{pages.intro.label}</Title>
-      <Text>Welcome to the <b>Music Shool</b> application.</Text>
+      <Text>
+        Welcome to the <b>Music Shool</b> application.
+      </Text>
       <Title order={2}>Motivation</Title>
       <Text>
         There are dozens of applications that provide visual learning of notes, intervals, and
         similar concepts, but I haven’t found one that lets you build mental maps directly on the
-        instrument itself. To address this, the <b>Music School</b> application is designed to capture sound from any
-        instrument and validate it against the expected one. This way, you can build maps that
-        connect theoretical knowledge directly to your fingertips.
+        instrument itself. To address this, the <b>Music School</b> application is designed to
+        capture sound from any instrument and validate it against the expected one. This way, you
+        can build maps that connect theoretical knowledge directly to your fingertips.
       </Text>
       <Title order={2}>Available Tools</Title>
       <List withPadding>
