@@ -19,7 +19,7 @@ export function NoteRange({
   const [fromError, setFromError] = useState('');
   const [toError, setToError] = useState('');
   return (
-    <Group justify="center">
+    <Group justify="center" mt="md">
       <Text>From:</Text>
       <Popover opened={!!fromError} withArrow arrowSize={arrowSize}>
         <Popover.Target>

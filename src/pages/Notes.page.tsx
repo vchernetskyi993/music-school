@@ -1,6 +1,18 @@
 import { useEffect, useState } from 'react';
+import { IconPlayerPlay } from '@tabler/icons-react';
 import { Note } from 'tonal';
-import { Container, Divider, Group, Loader, Stack, Text } from '@mantine/core';
+import * as Tone from 'tone';
+import {
+  ActionIcon,
+  Container,
+  Divider,
+  Group,
+  Loader,
+  Stack,
+  Tabs,
+  Text,
+  Title,
+} from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { NoteRange } from '@/components/NoteRange';
 import { delay } from '@/helpers/async';
@@ -12,7 +24,13 @@ type State = { expected: string; altered: Altered };
 const defaultFrom = 'E2';
 const defaultTo = 'E5';
 
+const tabs = {
+  abc: 'abc',
+  sound: 'sound',
+};
+
 export function Notes() {
+  const [tab, setTab] = useState(tabs.abc);
   const [matched, setMatched] = useState<boolean>(false);
   const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
   const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
@@ -33,28 +51,65 @@ export function Notes() {
   }, [actual]);
   return (
     <Container fluid>
-      <Stack gap="xs">
-        <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
-        <Group justify="center">
-          <Text c="grape" ta="center" size="xl" mt="md">
-            {state.expected}
+      <Tabs
+        value={tab}
+        onChange={(value) => {
+          setTab(value!);
+          refresh();
+        }}
+      >
+        <Tabs.List>
+          <Tabs.Tab value={tabs.abc}>ABC</Tabs.Tab>
+          <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
+        </Tabs.List>
+        <Stack gap="xs">
+          <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
+          <Group justify="center" m="md">
+            <Expected tab={tab} note={state.expected} />
+          </Group>
+          <Divider size="md" />
+          <Text
+            c={sound ? (matched ? 'green' : 'red') : 'dimmed'}
+            ta="center"
+            size={sound ? 'xl' : 'md'}
+            maw={580}
+            mx="auto"
+            mt="sm"
+          >
+            {actual || 'Waiting for note...'}
           </Text>
-        </Group>
-        <Divider size="md" />
-        <Text
-          c={sound ? (matched ? 'green' : 'red') : 'dimmed'}
-          ta="center"
-          size={sound ? 'xl' : 'md'}
-          maw={580}
-          mx="auto"
-          mt="sm"
-        >
-          {actual || 'Waiting for note...'}
-        </Text>
-        <Loader color="blue" type="dots" mx="auto" />
-      </Stack>
+          <Loader color="blue" type="dots" mx="auto" />
+        </Stack>
+      </Tabs>
     </Container>
   );
+}
+
+function Expected({ tab, note }: { tab: string; note: string }) {
+  switch (tab) {
+    case tabs.abc:
+      return (
+        <Title c="grape" ta="center" order={3}>
+          {note}
+        </Title>
+      );
+    case tabs.sound: {
+      const audio = new Tone.Synth().toDestination();
+      return (
+        <ActionIcon
+          variant="light"
+          size="xl"
+          onClick={() => {
+            audio.triggerAttackRelease(note, '4n');
+          }}
+        >
+          <IconPlayerPlay />
+        </ActionIcon>
+      );
+    }
+    default:
+      throw Error(`Unsupported tab ${tab}`);
+  }
 }
 
 function freshState(from: string, to: string, previous?: string): State {

@@ -6,7 +6,7 @@ For usage and feature list refer to the [introduction page](https://vchernetskyi
 
 ## Motivation
 
-There are dozens of applications that provide visual learning of notes, intervals, and similar concepts, but I haven’t found one that lets you build mental maps directly on the instrument itself. To address this, the **Music School** application is designed to capture sound from any instrument and validate it against the expected one. This way, you can build maps that connect theoretical knowledge directly to your fingertips.
+There are dozens of applications that provide visual learning of notes, intervals, and similar concepts, but I haven’t found one that lets you build _mental maps directly on the instrument itself_. To address this, the **Music School** application is designed to capture sound from any instrument and validate it against the expected one. This way, you can chart pathways that connect theoretical knowledge directly to your fingertips.
 
 ## Roadmap
 
@@ -16,13 +16,12 @@ There are dozens of applications that provide visual learning of notes, interval
 - [ ] Visualize Notes
     - [x] frequency
     - [x] letter + number
-    - [ ] staff
 - [ ] Study Notes
     - [x] note (letter+octave) -> instrument sound
         - [x] sharps & flats
         - [x] set note range
     - [ ] note (staff) -> instrument sound
-    - [ ] note (digital sound) -> instrument sound
+    - [x] note (digital sound) -> instrument sound
 - [ ] Study Intervals
 - [ ] Study Chords
 
