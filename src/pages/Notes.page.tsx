@@ -59,6 +59,9 @@ export function Notes() {
 
 function freshState(from: string, to: string, previous?: string): State {
   const altered = Math.round(Math.random());
+  if (from === to) {
+    return { altered, expected: noteFromFrequency(Note.get(from).freq!, altered) };
+  }
   const note = randomNote(from, to, altered);
   if (note === previous) {
     return freshState(from, to, previous);
