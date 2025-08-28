@@ -25,12 +25,12 @@ const defaultFrom = 'E2';
 const defaultTo = 'E5';
 
 const tabs = {
-  abc: 'abc',
+  ipn: 'ipn',
   sound: 'sound',
 };
 
 export function Notes() {
-  const [tab, setTab] = useState(tabs.abc);
+  const [tab, setTab] = useState(tabs.ipn);
   const [matched, setMatched] = useState<boolean>(false);
   const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
   const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
@@ -59,7 +59,7 @@ export function Notes() {
         }}
       >
         <Tabs.List>
-          <Tabs.Tab value={tabs.abc}>ABC</Tabs.Tab>
+          <Tabs.Tab value={tabs.ipn}>IPN</Tabs.Tab>
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
         </Tabs.List>
         <Stack gap="xs">
@@ -87,7 +87,7 @@ export function Notes() {
 
 function Expected({ tab, note }: { tab: string; note: string }) {
   switch (tab) {
-    case tabs.abc:
+    case tabs.ipn:
       return (
         <Title c="grape" ta="center" order={3}>
           {note}
