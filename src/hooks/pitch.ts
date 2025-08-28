@@ -75,7 +75,10 @@ async function approximatePitch(
       (!!latestPitch && Math.abs(pitches[pitches.length - 1] - latestPitch) <= step)
     );
   };
-  while (latestPitch != null && isSameNote() && waitedFor < config.maxWait) {
+  while (latestPitch != null && waitedFor < config.maxWait) {
+    if (!isSameNote()) {
+      break;
+    }
     pitches.push(latestPitch);
     await delay(config.captureDelay);
     waitedFor += config.captureDelay;
