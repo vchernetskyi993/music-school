@@ -4,6 +4,10 @@ A set of tools to assist with learning a musical instrument (including human voi
 
 For usage and feature list refer to the [introduction page](https://vchernetskyi993.github.io/music-school/).
 
+## Motivation
+
+There are dozens of applications that provide visual learning of notes, intervals, and similar concepts, but I haven’t found one that lets you build mental maps directly on the instrument itself. To address this, the **Music School** application is designed to capture sound from any instrument and validate it against the expected one. This way, you can build maps that connect theoretical knowledge directly to your fingertips.
+
 ## Roadmap
 
 - [x] Github Pages
