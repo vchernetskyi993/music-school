@@ -25,7 +25,7 @@ export default function App() {
       const analyserNode = audioContext.createAnalyser();
       audioContext.createMediaStreamSource(stream).connect(analyserNode);
       const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
-      detector.minVolumeDecibels = -10;
+      detector.minVolumeDecibels = -15;
       setState({ node: analyserNode, detector, rate: audioContext.sampleRate });
     });
   }, []);
