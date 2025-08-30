@@ -24,19 +24,29 @@ const config = {
   minClarity: 80,
 };
 
-type Opts = { defaultFrequency?: number; step: number };
+type Abortable = { aborted: boolean };
+type Opts = { defaultFrequency?: number; step: number; pause: boolean };
 
 export function useSound(opts: Opts): number | undefined {
   const context = useOutletContext<ContextType | null>();
   const [frequency, setFrequency] = useState(opts.defaultFrequency);
   useEffect(() => {
+    if (opts.pause) {
+      return;
+    }
     if (context) {
       const { node, detector, rate } = context;
-      captureFrequency(node, detector, rate, opts.step!).then((captured) =>
-        setFrequency(Math.round(captured * 100) / 100)
-      );
+      const abortable = { aborted: false };
+      captureFrequency(node, detector, rate, opts.step!, abortable).then((captured) => {
+        if (captured) {
+          setFrequency(Math.round(captured * 100) / 100);
+        }
+      });
+      return () => {
+        abortable.aborted = true;
+      };
     }
-  }, [context, frequency]);
+  }, [context, frequency, opts.pause]);
   return frequency;
 }
 
@@ -44,18 +54,22 @@ async function captureFrequency(
   node: AnalyserNode,
   detector: Detector,
   rate: number,
-  step: number
-): Promise<number> {
+  step: number,
+  abortable: Abortable
+): Promise<number | null> {
   const nextPitch = () => singlePitch(node, detector, rate);
   let result: number | null = null;
   while (result == null) {
+    if (abortable.aborted) {
+      return null;
+    }
     await delay(config.captureDelay);
     const pitch = nextPitch();
     if (pitch == null) {
       result = pitch;
       continue;
     }
-    result = await approximatePitch(pitch, step, nextPitch);
+    result = await approximatePitch(pitch, step, nextPitch, abortable);
     // console.log(`Approximate pitch: ${result}`);
   }
   return result;
@@ -64,8 +78,9 @@ async function captureFrequency(
 async function approximatePitch(
   initialPitch: number,
   step: number,
-  nextPitch: () => number | null
-): Promise<number> {
+  nextPitch: () => number | null,
+  abortable: Abortable
+): Promise<number | null> {
   const pitches: number[] = [];
   let latestPitch: number | null = initialPitch;
   let waitedFor = 0;
@@ -76,6 +91,9 @@ async function approximatePitch(
     );
   };
   while (latestPitch != null && waitedFor < config.maxWait) {
+    if (abortable.aborted) {
+      return null;
+    }
     if (!isSameNote()) {
       break;
     }

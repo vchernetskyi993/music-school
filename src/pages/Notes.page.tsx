@@ -37,7 +37,8 @@ export function Notes() {
   const [state, setState] = useState<State>(() => freshState(from, to));
   const refresh = () => setState(freshState(from, to, state.expected));
   useEffect(refresh, [from, to]);
-  const sound = useSound({ step: frequencyDiff(from, nextNote(from)) });
+  const [pause, setPause] = useState(false);
+  const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
   const actual = sound ? noteFromFrequency(sound, state.altered) : '';
   useEffect(() => {
     if (!matched && actual === state.expected) {
@@ -65,7 +66,7 @@ export function Notes() {
         <Stack gap="xs">
           <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
           <Group justify="center" m="md">
-            <Expected tab={tab} note={state.expected} />
+            <Expected tab={tab} note={state.expected} pause={setPause} />
           </Group>
           <Divider size="md" />
           <Text
@@ -78,14 +79,22 @@ export function Notes() {
           >
             {actual || 'Waiting for note...'}
           </Text>
-          <Loader color="blue" type="dots" mx="auto" />
+          {!pause && <Loader color="blue" type="dots" mx="auto" />}
         </Stack>
       </Tabs>
     </Container>
   );
 }
 
-function Expected({ tab, note }: { tab: string; note: string }) {
+function Expected({
+  tab,
+  note,
+  pause,
+}: {
+  tab: string;
+  note: string;
+  pause: (pause: boolean) => void;
+}) {
   const player = usePlayer();
   switch (tab) {
     case tabs.ipn:
@@ -96,7 +105,14 @@ function Expected({ tab, note }: { tab: string; note: string }) {
       );
     case tabs.sound: {
       return (
-        <ActionIcon variant="light" size="xl" onClick={() => player.playNote(note)}>
+        <ActionIcon
+          variant="light"
+          size="xl"
+          onClick={() => {
+            pause(true);
+            player.playNote(note).then(() => pause(false));
+          }}
+        >
           <IconPlayerPlay />
         </ActionIcon>
       );

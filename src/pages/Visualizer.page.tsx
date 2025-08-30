@@ -7,6 +7,7 @@ export function Visualizer() {
   const sound = useSound({
     defaultFrequency: 263,
     step: frequencyDiff('E2', nextNote('E2')),
+    pause: false,
   });
   return (
     <Container fluid>
