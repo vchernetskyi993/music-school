@@ -7,6 +7,7 @@ import { Visualizer } from './pages/Visualizer.page';
 const router = createHashRouter([
   {
     Component: App,
+    errorElement: <Navigate to="intro" />,
     children: [
       {
         index: true,
