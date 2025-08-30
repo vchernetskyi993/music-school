@@ -35,19 +35,23 @@ export function Notes() {
   const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
   const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
   const [state, setState] = useState<State>(() => freshState(from, to));
-  const refresh = () => setState(freshState(from, to, state.expected));
-  useEffect(refresh, [from, to]);
   const [pause, setPause] = useState(false);
+
+  const refresh = () => {
+    setMatched(false);
+    setPause(false);
+    setState(freshState(from, to, state.expected));
+  };
+
+  useEffect(refresh, [from, to]);
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
   const actual = sound ? noteFromFrequency(sound, state.altered) : '';
   useEffect(() => {
     if (!matched && actual === state.expected) {
       // console.log(`State is expected: ${state.expected}`);
       setMatched(true);
-      delay(1000).then(() => {
-        refresh();
-        setMatched(false);
-      });
+      setPause(true);
+      delay(1000).then(refresh);
     }
   }, [actual]);
   return (
