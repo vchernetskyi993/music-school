@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
 import { IconPlayerPlay } from '@tabler/icons-react';
-import { Note } from 'tonal';
 import { ActionIcon, Container, Divider, Group, Stack, Tabs, Title } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { CapturedNote } from '@/components/CapturedNote';
 import { NoteRange } from '@/components/NoteRange';
-import { useSound } from '@/hooks/pitch';
 import { usePlayer } from '@/hooks/player';
 import { delay } from '@/utils/async';
-import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/utils/music';
-
-type State = { expected: string; altered: Altered };
+import { randomNote } from '@/utils/music';
 
 const defaultFrom = 'E2';
 const defaultTo = 'E5';
@@ -25,20 +21,19 @@ export function Notes() {
   const [matched, setMatched] = useState<boolean>(false);
   const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
   const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
-  const [state, setState] = useState<State>(() => freshState(from, to));
+  const [expected, setExpected] = useState(() => randomNote(from, to));
   const [pause, setPause] = useState(false);
+  const [actual, setActual] = useState('');
 
   const refresh = () => {
     setMatched(false);
     setPause(false);
-    setState(freshState(from, to, state.expected));
+    setExpected(randomNote(from, to, expected.ipn));
   };
 
   useEffect(refresh, [from, to]);
-  const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
-  const actual = sound ? noteFromFrequency(sound, state.altered) : '';
   useEffect(() => {
-    if (!matched && actual === state.expected) {
+    if (!matched && actual === expected.ipn) {
       // console.log(`State is expected: ${state.expected}`);
       setMatched(true);
       setPause(true);
@@ -61,14 +56,15 @@ export function Notes() {
         <Stack gap="xs">
           <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
           <Group justify="center" m="md">
-            <Expected tab={tab} note={state.expected} pause={setPause} />
+            <Expected tab={tab} note={expected.ipn} pause={setPause} />
           </Group>
           <Divider size="md" />
           <CapturedNote
             color={matched ? 'green' : 'red'}
             from={from}
             pause={pause}
-            altered={state.altered}
+            altered={expected.altered}
+            setNote={setActual}
           />
         </Stack>
       </Tabs>
@@ -110,25 +106,4 @@ function Expected({
     default:
       throw Error(`Unsupported tab ${tab}`);
   }
-}
-
-function freshState(from: string, to: string, previous?: string): State {
-  const altered = Math.round(Math.random());
-  if (from === to) {
-    return { altered, expected: noteFromFrequency(Note.get(from).freq!, altered) };
-  }
-  const note = randomNote(from, to, altered);
-  if (note === previous) {
-    return freshState(from, to, previous);
-  }
-  return { altered, expected: note };
-}
-
-function randomNote(from: string, to: string, altered: Altered): string {
-  const frequency = randomInt(Note.get(from).freq!, Note.get(to).freq!);
-  return noteFromFrequency(frequency, altered);
-}
-
-function randomInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1) + min);
 }

@@ -8,15 +8,18 @@ export function CapturedNote({
   pause = false,
   altered = Altered.Sharp,
   showFrequency = false,
+  setNote = () => {},
 }: {
   from?: string;
   color?: MantineColor;
   pause?: boolean;
   altered?: Altered;
   showFrequency?: boolean;
+  setNote?: (note: string) => void;
 }) {
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
   const note = sound ? noteFromFrequency(sound, altered) : '';
+  setNote(note);
   return (
     <Stack gap="xs">
       {note && (

@@ -4,3 +4,7 @@ export function median(arr: number[]): number {
   const middle = Math.floor(arr.length / 2);
   return isEven ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle];
 }
+
+export function randomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
