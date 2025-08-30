@@ -16,6 +16,7 @@ import {
 import { useLocalStorage } from '@mantine/hooks';
 import { NoteRange } from '@/components/NoteRange';
 import { useSound } from '@/hooks/pitch';
+import { usePlayer } from '@/hooks/player';
 import { delay } from '@/utils/async';
 import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/utils/music';
 
@@ -86,6 +87,7 @@ export function Notes() {
 }
 
 function Expected({ tab, note }: { tab: string; note: string }) {
+  const player = usePlayer();
   switch (tab) {
     case tabs.ipn:
       return (
@@ -94,15 +96,8 @@ function Expected({ tab, note }: { tab: string; note: string }) {
         </Title>
       );
     case tabs.sound: {
-      const audio = new Tone.Synth().toDestination();
       return (
-        <ActionIcon
-          variant="light"
-          size="xl"
-          onClick={() => {
-            audio.triggerAttackRelease(note, '4n');
-          }}
-        >
+        <ActionIcon variant="light" size="xl" onClick={() => player.playNote(note)}>
           <IconPlayerPlay />
         </ActionIcon>
       );
