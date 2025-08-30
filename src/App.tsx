@@ -20,9 +20,7 @@ export default function App() {
   const [opened, { toggle }] = useDisclosure();
   const [state, setState] = useState<ContextType | null>(null);
   useEffect(() => {
-    console.log('getting user media');
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      console.log('creating audio context');
       const audioContext = new window.AudioContext();
       const analyserNode = audioContext.createAnalyser();
       audioContext.createMediaStreamSource(stream).connect(analyserNode);

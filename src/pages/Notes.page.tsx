@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { IconPlayerPlay } from '@tabler/icons-react';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { ActionIcon, Container, Divider, Group, Stack, Tabs, Title } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { CapturedNote } from '@/components/CapturedNote';
+import { pages } from '@/components/NavBar';
 import { NoteRange } from '@/components/NoteRange';
 import { usePlayer } from '@/hooks/player';
 import { delay } from '@/utils/async';
@@ -17,7 +19,8 @@ const tabs = {
 };
 
 export function Notes() {
-  const [tab, setTab] = useState(tabs.spn);
+  const { tab } = useParams();
+  const navigate = useNavigate();
   const [matched, setMatched] = useState<boolean>(false);
   const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
   const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
@@ -44,8 +47,8 @@ export function Notes() {
     <Container fluid>
       <Tabs
         value={tab}
-        onChange={(value) => {
-          setTab(value!);
+        onChange={(tab) => {
+          navigate(generatePath(pages.studyNotes.to, { tab }));
           refresh();
         }}
       >
@@ -56,7 +59,7 @@ export function Notes() {
         <Stack gap="xs">
           <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
           <Group justify="center" m="md">
-            <Expected tab={tab} note={expected.spn} paused={paused} pause={pause} />
+            <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
           </Group>
           <Divider size="md" />
           <CapturedNote

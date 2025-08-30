@@ -21,7 +21,7 @@ export function usePlayer(): Player {
   const [cachedAudio, setAudio] = useState<any>();
   return {
     async playNote(note) {
-      const tone = cachedTone || await importTone();
+      const tone = cachedTone || (await importTone());
       const audio = cachedAudio || buildAudio(tone);
       return new Promise((resolve) => {
         tone.start().then(() => {

@@ -1,4 +1,4 @@
-import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
 import App from './App';
 import { Intro } from './pages/Intro.page';
 import { Notes } from './pages/Notes.page';
@@ -10,6 +10,10 @@ const router = createHashRouter([
     children: [
       {
         index: true,
+        element: <Navigate to="intro" />,
+      },
+      {
+        path: 'intro',
         Component: Intro,
       },
       {
@@ -17,7 +21,7 @@ const router = createHashRouter([
         Component: Visualizer,
       },
       {
-        path: 'notes',
+        path: 'notes/:tab',
         Component: Notes,
       },
     ],
