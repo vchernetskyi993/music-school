@@ -12,8 +12,10 @@ export function usePlayer(): Player {
   return {
     playNote(note) {
       return new Promise((resolve) => {
-        audio.triggerAttackRelease(note, noteLength);
-        audio.onsilence = () => resolve();
+        Tone.start().then(() => {
+          audio.triggerAttackRelease(note, noteLength);
+          audio.onsilence = () => resolve();
+        });
       });
     },
   };
