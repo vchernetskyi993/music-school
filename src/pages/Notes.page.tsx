@@ -22,12 +22,12 @@ export function Notes() {
   const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
   const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
   const [expected, setExpected] = useState(() => randomNote(from, to));
-  const [pause, setPause] = useState(false);
+  const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
 
   const refresh = () => {
     setMatched(false);
-    setPause(false);
+    pause(false);
     setExpected(randomNote(from, to, expected.ipn));
   };
 
@@ -36,7 +36,7 @@ export function Notes() {
     if (!matched && actual === expected.ipn) {
       // console.log(`State is expected: ${state.expected}`);
       setMatched(true);
-      setPause(true);
+      pause(true);
       delay(1000).then(refresh);
     }
   }, [actual]);
@@ -56,13 +56,13 @@ export function Notes() {
         <Stack gap="xs">
           <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
           <Group justify="center" m="md">
-            <Expected tab={tab} note={expected.ipn} pause={setPause} />
+            <Expected tab={tab} note={expected.ipn} paused={paused} pause={pause} />
           </Group>
           <Divider size="md" />
           <CapturedNote
             color={matched ? 'green' : 'red'}
             from={from}
-            pause={pause}
+            pause={paused}
             altered={expected.altered}
             setNote={setActual}
           />
@@ -75,10 +75,12 @@ export function Notes() {
 function Expected({
   tab,
   note,
+  paused,
   pause,
 }: {
   tab: string;
   note: string;
+  paused: boolean;
   pause: (pause: boolean) => void;
 }) {
   const player = usePlayer();
@@ -98,6 +100,7 @@ function Expected({
             pause(true);
             player.playNote(note).then(() => pause(false));
           }}
+          disabled={paused}
         >
           <IconPlayerPlay />
         </ActionIcon>
