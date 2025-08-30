@@ -1,7 +1,7 @@
 import { Note } from 'tonal';
 import { Container, Group, Loader, Stack, Text } from '@mantine/core';
-import { frequencyDiff, nextNote } from '@/helpers/music';
 import { useSound } from '@/hooks/pitch';
+import { frequencyDiff, nextNote } from '@/utils/music';
 
 export function Visualizer() {
   const sound = useSound({

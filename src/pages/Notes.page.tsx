@@ -15,9 +15,9 @@ import {
 } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { NoteRange } from '@/components/NoteRange';
-import { delay } from '@/helpers/async';
-import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/helpers/music';
 import { useSound } from '@/hooks/pitch';
+import { delay } from '@/utils/async';
+import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/utils/music';
 
 type State = { expected: string; altered: Altered };
 
