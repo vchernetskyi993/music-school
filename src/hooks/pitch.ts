@@ -16,12 +16,6 @@ const config = {
    * Maximum time in milliseconds to produce note sound from received pitches.
    */
   maxWait: 500,
-
-  /**
-   * Minimum pitch clarity to consider for frequency detection.
-   * Valid range: 0-100.
-   */
-  minClarity: 20,
 };
 
 type Abortable = { aborted: boolean };
@@ -108,9 +102,9 @@ async function approximatePitch(
 function singlePitch(node: AnalyserNode, detector: Detector, rate: number): number | null {
   const input = new Float32Array(detector.inputLength);
   node.getFloatTimeDomainData(input);
-  const [pitch, clarity] = detector.findPitch(input, rate);
+  const [pitch] = detector.findPitch(input, rate);
   // console.log(`Pitch: ${pitch}, Clarity: ${clarity}`);
-  if (pitch === 0 || clarity * 100 <= config.minClarity) {
+  if (pitch === 0) {
     return null;
   }
   return pitch;
