@@ -1,18 +1,9 @@
 import { useEffect, useState } from 'react';
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { Note } from 'tonal';
-import {
-  ActionIcon,
-  Container,
-  Divider,
-  Group,
-  Loader,
-  Stack,
-  Tabs,
-  Text,
-  Title,
-} from '@mantine/core';
+import { ActionIcon, Container, Divider, Group, Stack, Tabs, Title } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
+import { CapturedNote } from '@/components/CapturedNote';
 import { NoteRange } from '@/components/NoteRange';
 import { useSound } from '@/hooks/pitch';
 import { usePlayer } from '@/hooks/player';
@@ -73,17 +64,12 @@ export function Notes() {
             <Expected tab={tab} note={state.expected} pause={setPause} />
           </Group>
           <Divider size="md" />
-          <Text
-            c={sound ? (matched ? 'green' : 'red') : 'dimmed'}
-            ta="center"
-            size={sound ? 'xl' : 'md'}
-            maw={580}
-            mx="auto"
-            mt="sm"
-          >
-            {actual || 'Waiting for note...'}
-          </Text>
-          {!pause && <Loader color="blue" type="dots" mx="auto" />}
+          <CapturedNote
+            color={matched ? 'green' : 'red'}
+            from={from}
+            pause={pause}
+            altered={state.altered}
+          />
         </Stack>
       </Tabs>
     </Container>

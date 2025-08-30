@@ -25,11 +25,11 @@ const config = {
 };
 
 type Abortable = { aborted: boolean };
-type Opts = { defaultFrequency?: number; step: number; pause: boolean };
+type Opts = { step: number; pause: boolean };
 
-export function useSound(opts: Opts): number | undefined {
+export function useSound(opts: Opts): number | null {
   const context = useOutletContext<ContextType | null>();
-  const [frequency, setFrequency] = useState(opts.defaultFrequency);
+  const [frequency, setFrequency] = useState<number | null>(null);
   useEffect(() => {
     if (opts.pause) {
       return;
