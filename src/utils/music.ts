@@ -21,12 +21,12 @@ export function frequencyDiff(from: string, to: string): number {
   return Math.round(diff * 100) / 100;
 }
 
-type Note = { ipn: string; altered: Altered };
+type Note = { spn: string; altered: Altered };
 
 export function randomNote(from: string, to: string, previous?: string): Note {
   const altered = Math.round(Math.random());
   if (from === to) {
-    return { altered, ipn: noteFromFrequency(TonalNote.get(from).freq!, altered) };
+    return { altered, spn: noteFromFrequency(TonalNote.get(from).freq!, altered) };
   }
 
   const frequency = randomInt(TonalNote.get(from).freq!, TonalNote.get(to).freq!);
@@ -35,5 +35,5 @@ export function randomNote(from: string, to: string, previous?: string): Note {
     return randomNote(from, to, previous);
   }
 
-  return { altered, ipn: note };
+  return { altered, spn: note };
 }

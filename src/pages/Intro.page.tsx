@@ -36,9 +36,9 @@ export function Intro() {
       <Text>Expectations can be represented in the following formats:</Text>
       <List withPadding>
         <ListItem>
-          <b>IPN</b> -{' '}
+          <b>SPN</b> -{' '}
           <a href="https://en.wikipedia.org/wiki/Scientific_pitch_notation">
-            international (scientific) pitch notation
+            scientific pitch notation
           </a>
           .
         </ListItem>

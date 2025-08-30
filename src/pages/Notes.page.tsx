@@ -12,12 +12,12 @@ const defaultFrom = 'E2';
 const defaultTo = 'E5';
 
 const tabs = {
-  ipn: 'ipn',
+  spn: 'spn',
   sound: 'sound',
 };
 
 export function Notes() {
-  const [tab, setTab] = useState(tabs.ipn);
+  const [tab, setTab] = useState(tabs.spn);
   const [matched, setMatched] = useState<boolean>(false);
   const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
   const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
@@ -28,12 +28,12 @@ export function Notes() {
   const refresh = () => {
     setMatched(false);
     pause(false);
-    setExpected(randomNote(from, to, expected.ipn));
+    setExpected(randomNote(from, to, expected.spn));
   };
 
   useEffect(refresh, [from, to]);
   useEffect(() => {
-    if (!matched && actual === expected.ipn) {
+    if (!matched && actual === expected.spn) {
       // console.log(`State is expected: ${state.expected}`);
       setMatched(true);
       pause(true);
@@ -50,13 +50,13 @@ export function Notes() {
         }}
       >
         <Tabs.List>
-          <Tabs.Tab value={tabs.ipn}>IPN</Tabs.Tab>
+          <Tabs.Tab value={tabs.spn}>SPN</Tabs.Tab>
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
         </Tabs.List>
         <Stack gap="xs">
           <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
           <Group justify="center" m="md">
-            <Expected tab={tab} note={expected.ipn} paused={paused} pause={pause} />
+            <Expected tab={tab} note={expected.spn} paused={paused} pause={pause} />
           </Group>
           <Divider size="md" />
           <CapturedNote
@@ -85,7 +85,7 @@ function Expected({
 }) {
   const player = usePlayer();
   switch (tab) {
-    case tabs.ipn:
+    case tabs.spn:
       return (
         <Title c="grape" ta="center" order={3}>
           {note}
