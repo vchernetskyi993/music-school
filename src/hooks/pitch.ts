@@ -21,7 +21,7 @@ const config = {
    * Minimum pitch clarity to consider for frequency detection.
    * Valid range: 0-100.
    */
-  minClarity: 80,
+  minClarity: 40,
 };
 
 type Abortable = { aborted: boolean };
