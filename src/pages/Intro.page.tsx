@@ -5,7 +5,9 @@ import { pages } from '@/components/NavBar';
 export function Intro() {
   return (
     <Stack gap="sm">
-      <Title order={1}>{pages.intro.label}</Title>
+      <Title order={1} mt="md">
+        {pages.intro.label}
+      </Title>
       <Text>
         Welcome to the <b>Music Shool</b> application.
       </Text>
@@ -28,6 +30,20 @@ export function Intro() {
         <ListItem>
           <Link to={pages.studyNotes.to}>{pages.studyNotes.label}</Link> - play a note displayed on
           the screen. Useful to learn positions of single notes on the instrument.
+        </ListItem>
+      </List>
+      <Title order={2}>Study Modes</Title>
+      <Text>Expectations can be represented in the following formats:</Text>
+      <List withPadding>
+        <ListItem>
+          <b>IPN</b> -{' '}
+          <a href="https://en.wikipedia.org/wiki/Scientific_pitch_notation">
+            international (scientific) pitch notation
+          </a>
+          .
+        </ListItem>
+        <ListItem>
+          <b>Sound</b> - playable audio.
         </ListItem>
       </List>
     </Stack>
