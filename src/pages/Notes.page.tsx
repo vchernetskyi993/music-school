@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { Note } from 'tonal';
-import * as Tone from 'tone';
 import {
   ActionIcon,
   Container,

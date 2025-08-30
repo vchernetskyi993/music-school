@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import * as Tone from 'tone';
 
 interface Player {
-  playNote(note: string): void;
+  playNote: (note: string) => void;
 }
 
 export function usePlayer(): Player {
