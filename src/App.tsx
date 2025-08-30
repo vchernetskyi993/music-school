@@ -3,7 +3,7 @@ import '@mantine/core/styles.css';
 import { useEffect, useState } from 'react';
 import { PitchDetector } from 'pitchy';
 import { Outlet } from 'react-router-dom';
-import { AppShell, Burger, Group, MantineProvider, Title } from '@mantine/core';
+import { AppShell, Burger, Group, MantineProvider, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from './components/NavBar';
 import { theme } from './theme';
@@ -34,6 +34,7 @@ export default function App() {
       <AppShell
         padding="md"
         header={{ height: { base: 60, md: 70, lg: 80 } }}
+        footer={{ height: 25 }}
         navbar={{
           width: 180,
           breakpoint: 'sm',
@@ -50,6 +51,11 @@ export default function App() {
         <AppShell.Main>
           <Outlet context={state} />
         </AppShell.Main>
+        <AppShell.Footer p={5}>
+          <Text ta="right" size="xs">
+            Build: {__COMMIT_HASH__}
+          </Text>
+        </AppShell.Footer>
       </AppShell>
     </MantineProvider>
   );
