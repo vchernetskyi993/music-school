@@ -22,7 +22,7 @@ export function parseRosterInput(input: string): Roster | string {
     return validateNote(from) || validateNote(to) || validateRange(from, to) || { from, to };
   }
   const notes = input.split(',');
-  return validateAlteration(input) || notes.find(validateNote) || notes;
+  return validateAlteration(input) || notes.map(validateNote).find((e) => !!e) || notes;
 }
 
 export function randomNoteFromRoster(roster?: Roster | null, previous?: string): Note {
