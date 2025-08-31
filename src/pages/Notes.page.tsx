@@ -2,16 +2,12 @@ import { useEffect, useState } from 'react';
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { ActionIcon, Container, Divider, Group, Stack, Tabs, Title } from '@mantine/core';
-import { useLocalStorage } from '@mantine/hooks';
 import { CapturedNote } from '@/components/CapturedNote';
 import { pages } from '@/components/NavBar';
-import { NoteRange } from '@/components/NoteRange';
+import { NoteRoster } from '@/components/NoteRoster';
 import { usePlayer } from '@/hooks/player';
+import { firstNoteFromRoster, randomNoteFromRoster, useRoster } from '@/hooks/roster';
 import { delay } from '@/utils/async';
-import { randomNote } from '@/utils/music';
-
-const defaultFrom = 'E2';
-const defaultTo = 'E5';
 
 const tabs = {
   spn: 'spn',
@@ -22,19 +18,18 @@ export function Notes() {
   const { tab } = useParams();
   const navigate = useNavigate();
   const [matched, setMatched] = useState<boolean>(false);
-  const [from, setFrom] = useLocalStorage({ key: 'from', defaultValue: defaultFrom });
-  const [to, setTo] = useLocalStorage({ key: 'to', defaultValue: defaultTo });
-  const [expected, setExpected] = useState(() => randomNote(from, to));
+  const roster = useRoster();
+  const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
   const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
 
   const refresh = () => {
     setMatched(false);
     pause(false);
-    setExpected(randomNote(from, to, expected.spn));
+    setExpected(randomNoteFromRoster(roster, expected.spn));
   };
 
-  useEffect(refresh, [from, to]);
+  useEffect(refresh, [roster]);
   useEffect(() => {
     if (!matched && actual === expected.spn) {
       // console.log(`State is expected: ${state.expected}`);
@@ -57,14 +52,14 @@ export function Notes() {
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
         </Tabs.List>
         <Stack gap="xs">
-          <NoteRange from={from} setFrom={setFrom} to={to} setTo={setTo} />
+          <NoteRoster />
           <Group justify="center" m="md">
             <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
           </Group>
           <Divider size="md" />
           <CapturedNote
             color={matched ? 'green' : 'red'}
-            from={from}
+            from={firstNoteFromRoster(roster)}
             pause={paused}
             altered={expected.altered}
             setNote={setActual}
