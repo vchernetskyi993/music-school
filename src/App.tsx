@@ -3,7 +3,11 @@ import '@mantine/core/styles.css';
 import { useEffect, useState } from 'react';
 import { PitchDetector } from 'pitchy';
 import { Outlet } from 'react-router-dom';
-import { AudioContext, IAnalyserNode, IAudioContext } from 'standardized-audio-context';
+import {
+  IAnalyserNode,
+  IAudioContext,
+  AudioContext as StandardizedAudioContext,
+} from 'standardized-audio-context';
 import { AppShell, Burger, Group, MantineProvider, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from './components/NavBar';
@@ -12,7 +16,7 @@ import { theme } from './theme';
 export type Detector = PitchDetector<Float32Array<ArrayBufferLike>>;
 
 export type ContextType = {
-  audio: IAudioContext;
+  audio: AudioContext;
   node: IAnalyserNode<IAudioContext>;
   detector: Detector;
   rate: number;
@@ -23,13 +27,13 @@ export default function App() {
   const [state, setState] = useState<ContextType | null>(null);
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const audioContext = new AudioContext();
+      const audioContext = new StandardizedAudioContext();
       const analyserNode = audioContext.createAnalyser();
       audioContext.createMediaStreamSource(stream).connect(analyserNode);
       const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
       detector.minVolumeDecibels = -15;
       setState({
-        audio: audioContext,
+        audio: audioContext as unknown as AudioContext,
         node: analyserNode,
         detector,
         rate: audioContext.sampleRate,

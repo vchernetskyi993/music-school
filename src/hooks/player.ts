@@ -1,33 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import { CacheStorage, SplendidGrandPiano } from 'smplr';
+import { ContextType } from '@/App';
 
 interface Player {
+  loaded: boolean;
   playNote: (note: string) => Promise<void>;
 }
 
-const noteLength = '8n';
-
 export function usePlayer(): Player {
-  const [cachedTone, setTone] = useState<any>();
-  const importTone = async () => {
-    const tone = await import('tone');
-    setTone(tone);
-    return tone;
-  };
-  const buildAudio = (tone: any) => {
-    const audio = new tone.Synth().toDestination();
-    setAudio(audio);
-    return audio;
-  };
-  const [cachedAudio, setAudio] = useState<any>();
+  const context = useOutletContext<ContextType | null>();
+  const [loaded, setLoaded] = useState(false);
+  const piano = useMemo(
+    () => context && new SplendidGrandPiano(context.audio, { storage: new CacheStorage() }),
+    [context]
+  );
+  useEffect(() => {
+    if (piano) {
+      piano.load.then(() => setLoaded(true));
+    }
+  }, [piano]);
+
   return {
+    loaded,
     async playNote(note) {
-      const tone = cachedTone || (await importTone());
-      const audio = cachedAudio || buildAudio(tone);
       return new Promise((resolve) => {
-        tone.start().then(() => {
-          audio.triggerAttackRelease(note, noteLength);
-          audio.onsilence = () => resolve();
-        });
+        piano!.start({ note, duration: 1, onEnded: () => resolve() });
       });
     },
   };

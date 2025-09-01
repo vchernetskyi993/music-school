@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
-import { ActionIcon, Container, Divider, Group, Stack, Tabs, Title } from '@mantine/core';
+import { ActionIcon, Container, Divider, Group, Loader, Stack, Tabs, Title } from '@mantine/core';
 import { CapturedNote } from '@/components/CapturedNote';
 import { pages } from '@/components/NavBar';
 import { NoteRoster } from '@/components/NoteRoster';
@@ -90,7 +90,7 @@ function Expected({
         </Title>
       );
     case tabs.sound: {
-      return (
+      return player.loaded ? (
         <ActionIcon
           variant="light"
           size="xl"
@@ -102,6 +102,8 @@ function Expected({
         >
           <IconPlayerPlay />
         </ActionIcon>
+      ) : (
+        <Loader />
       );
     }
     default:
