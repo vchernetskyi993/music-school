@@ -28,6 +28,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
+    "standardized-audio-context": "^25.3.77",
     "tonal": "^6.4.2",
     "tone": "^15.1.22"
   },

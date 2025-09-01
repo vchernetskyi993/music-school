@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { IAnalyserNode, IAudioContext } from 'standardized-audio-context';
 import { ContextType, Detector } from '@/App';
 import { delay } from '@/utils/async';
 import { median } from '@/utils/math';
@@ -45,7 +46,7 @@ export function useSound(opts: Opts): number | null {
 }
 
 async function captureFrequency(
-  node: AnalyserNode,
+  node: IAnalyserNode<IAudioContext>,
   detector: Detector,
   rate: number,
   step: number,
@@ -99,7 +100,11 @@ async function approximatePitch(
   return median(pitches);
 }
 
-function singlePitch(node: AnalyserNode, detector: Detector, rate: number): number | null {
+function singlePitch(
+  node: IAnalyserNode<IAudioContext>,
+  detector: Detector,
+  rate: number
+): number | null {
   const input = new Float32Array(detector.inputLength);
   node.getFloatTimeDomainData(input);
   const [pitch] = detector.findPitch(input, rate);
