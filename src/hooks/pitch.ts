@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { concatMap, interval, takeWhile } from 'rxjs';
 import { IAnalyserNode, IAudioContext } from 'standardized-audio-context';
 import { ContextType, Detector } from '@/App';
 import { delay } from '@/utils/async';
@@ -17,6 +18,11 @@ const config = {
    * Maximum time in milliseconds to produce note sound from received pitches.
    */
   maxWait: 500,
+
+  /**
+   * Silence time in milliseconds to clean up previously captured note.
+   */
+  cleanUpAfter: 1000,
 };
 
 type Abortable = { aborted: boolean };
@@ -32,11 +38,18 @@ export function useSound(opts: Opts): number | null {
     if (context) {
       const { node, detector, rate } = context;
       const abortable = { aborted: false };
-      captureFrequency(node, detector, rate, opts.step!, abortable).then((captured) => {
-        if (captured) {
-          setFrequency(Math.round(captured * 100) / 100);
-        }
-      });
+      interval()
+        .pipe(
+          concatMap(() => captureFrequency(node, detector, rate, opts.step!, abortable)),
+          takeWhile(() => !abortable.aborted)
+        )
+        .subscribe((captured) => {
+          if (captured) {
+            setFrequency(Math.round(captured * 100) / 100);
+          } else {
+            setFrequency(null);
+          }
+        });
       return () => {
         abortable.aborted = true;
       };
@@ -54,11 +67,13 @@ async function captureFrequency(
 ): Promise<number | null> {
   const nextPitch = () => singlePitch(node, detector, rate);
   let result: number | null = null;
-  while (result == null) {
+  let waitedFor = 0;
+  while (result == null && waitedFor < config.cleanUpAfter) {
     if (abortable.aborted) {
       return null;
     }
     await delay(config.captureDelay);
+    waitedFor += config.captureDelay;
     const pitch = nextPitch();
     if (pitch == null) {
       result = pitch;
