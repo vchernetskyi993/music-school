@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { concatMap, interval, takeWhile } from 'rxjs';
+import { buffer, filter, map, merge, pairwise, repeat, takeUntil, takeWhile, timer } from 'rxjs';
 import { IAnalyserNode, IAudioContext } from 'standardized-audio-context';
 import { ContextType, Detector } from '@/App';
-import { delay } from '@/utils/async';
 import { median } from '@/utils/math';
 
 export type NoteSound = { note: string; frequency: number };
@@ -12,7 +11,7 @@ const config = {
   /**
    * Time in milliseconds to wait between pitch capture attempts.
    */
-  captureDelay: 50,
+  captureInterval: 50,
 
   /**
    * Maximum time in milliseconds to produce note sound from received pitches.
@@ -25,7 +24,6 @@ const config = {
   cleanUpAfter: 1000,
 };
 
-type Abortable = { aborted: boolean };
 type Opts = { step: number; pause: boolean };
 
 export function useSound(opts: Opts): number | null {
@@ -37,82 +35,41 @@ export function useSound(opts: Opts): number | null {
     }
     if (context) {
       const { node, detector, rate } = context;
-      const abortable = { aborted: false };
-      interval()
+      let aborted = false;
+      const notePairs = timer(0, config.captureInterval).pipe(
+        takeWhile(() => !aborted),
+        map(() => singlePitch(node, detector, rate)),
+        filter((sound) => typeof sound === 'number'),
+        pairwise()
+      );
+      const approximate = notePairs.pipe(
+        buffer(
+          merge(
+            notePairs.pipe(
+              filter(([previous, current]) => !isSameNote(previous!, current!, opts.step))
+            ),
+            timer(config.maxWait)
+          )
+        ),
+        filter((buf) => buf.length > 0),
+        map((buf) => buf.map((pair) => pair[0])),
+        map(median)
+      );
+      timer(config.cleanUpAfter, config.cleanUpAfter)
         .pipe(
-          concatMap(() => captureFrequency(node, detector, rate, opts.step!, abortable)),
-          takeWhile(() => !abortable.aborted)
+          takeWhile(() => !aborted),
+          takeUntil(approximate),
+          map(() => null),
+          repeat()
         )
-        .subscribe((captured) => {
-          if (captured) {
-            setFrequency(Math.round(captured * 100) / 100);
-          } else {
-            setFrequency(null);
-          }
-        });
+        .subscribe(() => setFrequency(null));
+      approximate.subscribe((captured) => setFrequency(Math.round(captured * 100) / 100));
       return () => {
-        abortable.aborted = true;
+        aborted = true;
       };
     }
-  }, [context, frequency, opts.pause]);
+  }, [context, opts.pause]);
   return frequency;
-}
-
-async function captureFrequency(
-  node: IAnalyserNode<IAudioContext>,
-  detector: Detector,
-  rate: number,
-  step: number,
-  abortable: Abortable
-): Promise<number | null> {
-  const nextPitch = () => singlePitch(node, detector, rate);
-  let result: number | null = null;
-  let waitedFor = 0;
-  while (result == null && waitedFor < config.cleanUpAfter) {
-    if (abortable.aborted) {
-      return null;
-    }
-    await delay(config.captureDelay);
-    waitedFor += config.captureDelay;
-    const pitch = nextPitch();
-    if (pitch == null) {
-      result = pitch;
-      continue;
-    }
-    result = await approximatePitch(pitch, step, nextPitch, abortable);
-    // console.log(`Approximate pitch: ${result}`);
-  }
-  return result;
-}
-
-async function approximatePitch(
-  initialPitch: number,
-  step: number,
-  nextPitch: () => number | null,
-  abortable: Abortable
-): Promise<number | null> {
-  const pitches: number[] = [];
-  let latestPitch: number | null = initialPitch;
-  let waitedFor = 0;
-  const isSameNote = () => {
-    return (
-      pitches.length === 0 ||
-      (!!latestPitch && Math.abs(pitches[pitches.length - 1] - latestPitch) <= step)
-    );
-  };
-  while (latestPitch != null && waitedFor < config.maxWait) {
-    if (abortable.aborted) {
-      return null;
-    }
-    if (!isSameNote()) {
-      break;
-    }
-    pitches.push(latestPitch);
-    await delay(config.captureDelay);
-    waitedFor += config.captureDelay;
-    latestPitch = nextPitch();
-  }
-  return median(pitches);
 }
 
 function singlePitch(
@@ -128,4 +85,8 @@ function singlePitch(
     return null;
   }
   return pitch;
+}
+
+function isSameNote(soundA: number, soundB: number, step: number): boolean {
+  return Math.abs(soundA - soundB) <= step;
 }

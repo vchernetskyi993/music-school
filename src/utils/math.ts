@@ -1,4 +1,7 @@
 export function median(arr: number[]): number {
+  if (arr.length === 0) {
+    throw new Error("Array can't be empty!'");
+  }
   const sorted = [...arr].sort((a, b) => a - b);
   const isEven = arr.length % 2 === 0;
   const middle = Math.floor(arr.length / 2);
