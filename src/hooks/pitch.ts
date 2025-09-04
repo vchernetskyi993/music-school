@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { buffer, filter, map, merge, pairwise, repeat, takeUntil, takeWhile, timer } from 'rxjs';
+import { map, takeWhile, timer } from 'rxjs';
 import { IAnalyserNode, IAudioContext } from 'standardized-audio-context';
 import { ContextType, Detector } from '@/App';
-import { median } from '@/utils/math';
 
 export type NoteSound = { note: string; frequency: number };
 
@@ -69,8 +68,4 @@ function singlePitch(
     return null;
   }
   return pitch;
-}
-
-function isSameNote(soundA: number, soundB: number, step: number): boolean {
-  return Math.abs(soundA - soundB) <= step;
 }
