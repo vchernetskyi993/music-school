@@ -8,10 +8,12 @@ import { NoteRoster } from '@/components/NoteRoster';
 import { usePlayer } from '@/hooks/player';
 import { firstNoteFromRoster, randomNoteFromRoster, useRoster } from '@/hooks/roster';
 import { delay } from '@/utils/async';
+import { toFixedDo } from '@/utils/music';
 
 const tabs = {
   spn: 'spn',
   sound: 'sound',
+  fixedDo: 'fixed-do',
 };
 
 export function Notes() {
@@ -50,6 +52,7 @@ export function Notes() {
         <Tabs.List>
           <Tabs.Tab value={tabs.spn}>SPN</Tabs.Tab>
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
+          <Tabs.Tab value={tabs.fixedDo}>Fixed Do</Tabs.Tab>
         </Tabs.List>
         <Stack gap="xs">
           <NoteRoster />
@@ -84,11 +87,7 @@ function Expected({
   const player = usePlayer();
   switch (tab) {
     case tabs.spn:
-      return (
-        <Title c="grape" ta="center" order={3}>
-          {note}
-        </Title>
-      );
+      return <ExpectedNote note={note} />;
     case tabs.sound: {
       return player.loaded ? (
         <ActionIcon
@@ -106,7 +105,17 @@ function Expected({
         <Loader />
       );
     }
+    case tabs.fixedDo:
+      return <ExpectedNote note={toFixedDo(note)} />;
     default:
       throw Error(`Unsupported tab ${tab}`);
   }
+}
+
+function ExpectedNote({ note }: { note: string }) {
+  return (
+    <Title c="grape" ta="center" order={3}>
+      {note}
+    </Title>
+  );
 }

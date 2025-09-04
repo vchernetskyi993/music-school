@@ -51,3 +51,27 @@ export function randomNoteFromRange(from: string, to: string, previous?: string)
 
   return { altered, spn: note };
 }
+
+const fixedDoMapping: { [key: string]: string } = {
+  C: 'Do',
+  D: 'Re',
+  E: 'Mi',
+  F: 'Fa',
+  G: 'Sol',
+  A: 'La',
+  B: 'Si',
+};
+
+const alterationsMapping: { [key: string]: string } = {
+  b: '♭',
+  '#': '♯',
+};
+
+export function toFixedDo(note: string): string {
+  const key = Object.keys(fixedDoMapping).find((key) => note.startsWith(key))!;
+  const result = note.replace(key, fixedDoMapping[key]);
+  return Object.keys(alterationsMapping).reduce(
+    (note, alt) => note.replace(alt, alterationsMapping[alt]),
+    result
+  );
+}

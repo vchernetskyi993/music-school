@@ -45,6 +45,13 @@ export function Intro() {
         <ListItem>
           <b>Sound</b> - playable audio.
         </ListItem>
+        <ListItem>
+          <b>Fixed Do</b> -{' '}
+          <a href="https://en.wikipedia.org/wiki/Solf%C3%A8ge#Fixed_do_solf%C3%A8ge">
+            fixed do solfège
+          </a>
+          .
+        </ListItem>
       </List>
     </Stack>
   );
