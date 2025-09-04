@@ -36,34 +36,18 @@ export function useSound(opts: Opts): number | null {
     if (context) {
       const { node, detector, rate } = context;
       let aborted = false;
-      const notePairs = timer(0, config.captureInterval).pipe(
-        takeWhile(() => !aborted),
-        map(() => singlePitch(node, detector, rate)),
-        filter((sound) => typeof sound === 'number'),
-        pairwise()
-      );
-      const approximate = notePairs.pipe(
-        buffer(
-          merge(
-            notePairs.pipe(
-              filter(([previous, current]) => !isSameNote(previous!, current!, opts.step))
-            ),
-            timer(config.maxWait)
-          )
-        ),
-        filter((buf) => buf.length > 0),
-        map((buf) => buf.map((pair) => pair[0])),
-        map(median)
-      );
-      timer(config.cleanUpAfter, config.cleanUpAfter)
+      timer(0, config.captureInterval)
         .pipe(
           takeWhile(() => !aborted),
-          takeUntil(approximate),
-          map(() => null),
-          repeat()
+          map(() => singlePitch(node, detector, rate))
         )
-        .subscribe(() => setFrequency(null));
-      approximate.subscribe((captured) => setFrequency(Math.round(captured * 100) / 100));
+        .subscribe((captured) => {
+          if (captured) {
+            setFrequency(Math.round(captured * 100) / 100);
+          } else {
+            setFrequency(null);
+          }
+        });
       return () => {
         aborted = true;
       };
