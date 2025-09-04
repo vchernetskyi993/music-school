@@ -11,16 +11,6 @@ const config = {
    * Time in milliseconds to wait between pitch capture attempts.
    */
   captureInterval: 50,
-
-  /**
-   * Maximum time in milliseconds to produce note sound from received pitches.
-   */
-  maxWait: 500,
-
-  /**
-   * Silence time in milliseconds to clean up previously captured note.
-   */
-  cleanUpAfter: 1000,
 };
 
 type Opts = { step: number; pause: boolean };
