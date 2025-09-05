@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
+import { identity } from 'rxjs';
 import { ActionIcon, Container, Divider, Group, Loader, Stack, Tabs, Title } from '@mantine/core';
 import { CapturedNote } from '@/components/CapturedNote';
 import { pages } from '@/components/NavBar';
@@ -66,6 +67,7 @@ export function Notes() {
             pause={paused}
             altered={expected.altered}
             setNote={setActual}
+            mapNote={tab === tabs.fixedDo ? toFixedDo : identity}
           />
         </Stack>
       </Tabs>

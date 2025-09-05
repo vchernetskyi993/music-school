@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { identity } from 'rxjs';
 import { Loader, MantineColor, Stack, Text } from '@mantine/core';
 import { useSound } from '@/hooks/pitch';
 import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/utils/music';
@@ -10,6 +11,7 @@ export function CapturedNote({
   altered = Altered.Sharp,
   showFrequency = false,
   setNote = () => {},
+  mapNote = identity,
 }: {
   from?: string;
   color?: MantineColor;
@@ -17,9 +19,10 @@ export function CapturedNote({
   altered?: Altered;
   showFrequency?: boolean;
   setNote?: (note: string) => void;
+  mapNote?: (note: string) => string;
 }) {
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
-  const note = sound ? noteFromFrequency(sound, altered) : '';
+  const note = sound ? mapNote(noteFromFrequency(sound, altered)) : '';
   useEffect(() => setNote(note), [note]);
   return (
     <Stack gap="xs">
