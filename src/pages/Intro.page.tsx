@@ -17,7 +17,7 @@ export function Intro() {
         similar concepts, but I haven’t found one that lets you build{' '}
         <i>mental maps directly on the instrument itself</i>. To address this, the{' '}
         <b>Music School</b> application is designed to capture sound from any instrument and
-        validate it against the expected one. This way, you can chart pathways maps that connect
+        validate it against the expected one. This way, you can chart pathways that connect
         theoretical knowledge directly to your fingertips.
       </Text>
       <Title order={2}>Available Tools</Title>
