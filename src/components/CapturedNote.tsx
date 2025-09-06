@@ -22,13 +22,13 @@ export function CapturedNote({
   mapNote?: (note: string) => string;
 }) {
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
-  const note = sound ? mapNote(noteFromFrequency(sound, altered)) : '';
+  const note = sound ? noteFromFrequency(sound, altered) : '';
   useEffect(() => setNote(note), [note]);
   return (
     <Stack gap="xs">
       {note && (
         <Text c={color} ta="center" size="xl" mt="sm">
-          {note}
+          {mapNote(note)}
         </Text>
       )}
       {sound && showFrequency && (
