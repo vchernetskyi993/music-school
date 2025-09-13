@@ -19,7 +19,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@test-utils": ["./test-utils"]
-    }
+    },
+    "sourceMap": true
   },
   "include": ["src", "test-utils"]
 }

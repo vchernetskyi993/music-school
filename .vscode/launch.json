@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/wraith13/vscode-schemas/refs/heads/master/en/latest/schemas/launch.json",
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Firefox",
+      "type": "firefox",
+      "request": "launch",
+      "url": "http://localhost:5173/music-school/",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}
