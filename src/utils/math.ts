@@ -11,3 +11,7 @@ export function median(arr: number[]): number {
 export function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+export function trimDecimal(n: number): number {
+  return Math.round(n * 100) / 100;
+}

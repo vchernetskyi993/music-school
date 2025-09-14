@@ -68,6 +68,7 @@ export function Notes() {
             altered={expected.altered}
             setNote={setActual}
             mapNote={tab === tabs.fixedDo ? toFixedDo : identity}
+            expectedNote={expected.spn}
           />
         </Stack>
       </Tabs>
