@@ -36,6 +36,8 @@ export function CapturedNote({
       {expectedFreq && (
         <Checkbox
           checked={hint}
+          color="lime.5"
+          iconColor="dark"
           onChange={(event) => setHint(event.currentTarget.checked)}
           label="Frequency Hint"
         />
