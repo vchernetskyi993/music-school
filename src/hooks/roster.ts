@@ -38,11 +38,7 @@ export function firstNoteFromRoster(roster?: Roster | null): string {
   if (!roster) {
     return '';
   }
-  return reduceRoster(
-    roster,
-    (notes) => notes[0],
-    (range) => range.from
-  );
+  return roster instanceof Array ? roster[0] : roster.from;
 }
 
 const defaultRoster: Roster = { from: 'E2', to: 'E5' };
@@ -63,22 +59,7 @@ function rosterFromInput(input: string): Roster | null {
 }
 
 function rosterToString(roster: Roster): string {
-  return reduceRoster(
-    roster,
-    (notes) => notes.join(','),
-    (range) => `${range.from}-${range.to}`
-  );
-}
-
-function reduceRoster<T>(
-  roster: Roster,
-  arrayReducer: (notes: string[]) => T,
-  rangeReducer: (range: Range) => T
-): T {
-  if (roster instanceof Array) {
-    return arrayReducer(roster as string[]);
-  }
-  return rangeReducer(roster as Range);
+  return roster instanceof Array ? roster.join(',') : `${roster.from}-${roster.to}`;
 }
 
 function validateNote(note: string): string {
