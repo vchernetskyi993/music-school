@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Note as TonalNote } from 'tonal';
+import { Range, Note as TonalNote } from 'tonal';
 import { useLocalStorage } from '@mantine/hooks';
-import { Altered, Note, randomNoteFromArray, randomNoteFromRange } from '@/utils/music';
+import { Altered, arrayRosterFromRange, Note, randomNoteFromArray } from '@/utils/music';
 
 export type Roster = string[] | Range;
 export type Range = { from: string; to: string };
@@ -29,11 +29,9 @@ export function randomNoteFromRoster(roster?: Roster | null, previous?: string):
   if (!roster) {
     return { spn: '', altered: Altered.Sharp };
   }
-  return reduceRoster(
-    roster,
-    (notes) => randomNoteFromArray(notes, previous),
-    (range) => randomNoteFromRange(range.from, range.to, previous)
-  );
+  const normalizedRoster =
+    roster instanceof Array ? roster : arrayRosterFromRange(roster.from, roster.to);
+  return randomNoteFromArray(normalizedRoster, previous);
 }
 
 export function firstNoteFromRoster(roster?: Roster | null): string {

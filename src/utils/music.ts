@@ -1,4 +1,4 @@
-import { Note as TonalNote } from 'tonal';
+import { Range, Note as TonalNote } from 'tonal';
 import { randomInt } from './math';
 
 export enum Altered {
@@ -37,19 +37,9 @@ export function randomNoteFromArray(notes: string[], previous?: string): Note {
   return { altered, spn: note };
 }
 
-export function randomNoteFromRange(from: string, to: string, previous?: string): Note {
-  const altered = Math.round(Math.random());
-  if (from === to) {
-    return { altered, spn: noteFromFrequency(TonalNote.get(from).freq!, altered) };
-  }
-
-  const frequency = randomInt(TonalNote.get(from).freq!, TonalNote.get(to).freq!);
-  const note = noteFromFrequency(frequency, altered);
-  if (note === previous) {
-    return randomNoteFromRange(from, to, previous);
-  }
-
-  return { altered, spn: note };
+export function arrayRosterFromRange(from: string, to: string): string[] {
+  const altered = Math.random() < 0.5;
+  return Range.chromatic([from, to], { sharps: altered });
 }
 
 const fixedDoMapping: { [key: string]: string } = {
