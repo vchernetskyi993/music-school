@@ -1,8 +1,20 @@
 import { useEffect, useState } from 'react';
-import { IconPlayerPlay } from '@tabler/icons-react';
+import { IconPlayerPlay, IconSettings } from '@tabler/icons-react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { identity } from 'rxjs';
-import { ActionIcon, Container, Divider, Group, Loader, Stack, Tabs, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Checkbox,
+  Container,
+  Divider,
+  Group,
+  Loader,
+  Popover,
+  Stack,
+  Tabs,
+  Title,
+} from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { CapturedNote } from '@/components/CapturedNote';
 import { pages } from '@/components/NavBar';
 import { NoteRoster } from '@/components/NoteRoster';
@@ -25,6 +37,7 @@ export function Notes() {
   const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
   const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
+  const [hint, setHint] = useLocalStorage({ key: 'settings-hint', defaultValue: false });
 
   const refresh = () => {
     setMatched(false);
@@ -56,7 +69,23 @@ export function Notes() {
           <Tabs.Tab value={tabs.fixedDo}>Fixed Do</Tabs.Tab>
         </Tabs.List>
         <Stack gap="xs">
-          <NoteRoster />
+          <Group justify="center" m="md">
+            <NoteRoster />
+            <Popover>
+              <Popover.Target>
+                <ActionIcon variant="transparent">
+                  <IconSettings />
+                </ActionIcon>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Checkbox
+                  checked={hint}
+                  onChange={(e) => setHint(e.currentTarget.checked)}
+                  label="Frequency Hint"
+                />
+              </Popover.Dropdown>
+            </Popover>
+          </Group>
           <Group justify="center" m="md">
             <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
           </Group>
@@ -69,6 +98,7 @@ export function Notes() {
             setNote={setActual}
             mapNote={tab === tabs.fixedDo ? toFixedDo : identity}
             expectedNote={expected.spn}
+            hint={hint}
           />
         </Stack>
       </Tabs>

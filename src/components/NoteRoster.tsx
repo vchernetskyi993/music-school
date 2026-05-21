@@ -20,7 +20,7 @@ export function NoteRoster() {
   }, [input]);
 
   return (
-    <Group justify="center" mt="md">
+    <Group justify="center">
       <Text>Notes:</Text>
       <Popover opened={!!error} withArrow arrowSize={arrowSize}>
         <Popover.Target>

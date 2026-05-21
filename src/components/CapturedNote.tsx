@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { identity } from 'rxjs';
 import { Note } from 'tonal';
-import { Checkbox, Loader, MantineColor, Stack, Text } from '@mantine/core';
+import { Loader, MantineColor, Stack, Text } from '@mantine/core';
 import { useSound } from '@/hooks/pitch';
 import { trimDecimal } from '@/utils/math';
 import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/utils/music';
@@ -15,6 +15,7 @@ export function CapturedNote({
   setNote = () => {},
   mapNote = identity,
   expectedNote = undefined,
+  hint = false,
 }: {
   from?: string;
   color?: MantineColor;
@@ -24,8 +25,8 @@ export function CapturedNote({
   setNote?: (note: string) => void;
   mapNote?: (note: string) => string;
   expectedNote?: string;
+  hint?: boolean;
 }) {
-  const [hint, setHint] = useState(false);
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
   const note = sound ? noteFromFrequency(sound, altered) : '';
   const expectedFreq = expectedNote && Note.freq(expectedNote);
@@ -33,15 +34,6 @@ export function CapturedNote({
   useEffect(() => setNote(note), [note]);
   return (
     <Stack gap="xs" align="center">
-      {expectedFreq && (
-        <Checkbox
-          checked={hint}
-          color="lime.5"
-          iconColor="dark"
-          onChange={(event) => setHint(event.currentTarget.checked)}
-          label="Frequency Hint"
-        />
-      )}
       {note && (
         <Text c={color} ta="center" size="xl" mt="sm">
           {mapNote(note)} {hint && diff && (diff < 0 ? '' : '+') + diff}
