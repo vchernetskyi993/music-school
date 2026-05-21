@@ -30,7 +30,7 @@ export function randomNoteFromArray(notes: string[], previous?: string): Note {
   }
 
   const note = notes[randomInt(0, notes.length - 1)];
-  if (note === previous) {
+  if (previous && TonalNote.get(note).freq === TonalNote.get(previous).freq) {
     return randomNoteFromArray(notes, previous);
   }
 
