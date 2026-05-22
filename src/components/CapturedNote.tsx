@@ -35,7 +35,7 @@ export function CapturedNote({
   return (
     <Stack gap="xs" align="center">
       {note && (
-        <Text c={color} ta="center" size="xl" mt="sm">
+        <Text c={color} ta="center" size="xl">
           {mapNote(note)} {hint && diff && (diff < 0 ? '' : '+') + diff}
         </Text>
       )}
@@ -44,12 +44,7 @@ export function CapturedNote({
           {sound}Hz
         </Text>
       )}
-      {!note && (
-        <Text c="dimmed" ta="center" size="md" mt="sm">
-          Waiting for note...
-        </Text>
-      )}
-      {!pause && <Loader color="blue" type="dots" mx="auto" />}
+      {!note && <Loader color="blue" type="dots" mx="auto" />}
     </Stack>
   );
 }

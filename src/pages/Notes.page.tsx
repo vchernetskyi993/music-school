@@ -16,6 +16,7 @@ import {
 } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { CapturedNote } from '@/components/CapturedNote';
+import { Counter } from '@/components/Counter';
 import { pages } from '@/components/NavBar';
 import { NoteRoster } from '@/components/NoteRoster';
 import { usePlayer } from '@/hooks/player';
@@ -29,6 +30,11 @@ const tabs = {
   fixedDo: 'fixed-do',
 };
 
+type Settings = {
+  hint: boolean;
+  counter: boolean;
+};
+
 export function Notes() {
   const { tab } = useParams();
   const navigate = useNavigate();
@@ -37,7 +43,10 @@ export function Notes() {
   const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
   const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
-  const [hint, setHint] = useLocalStorage({ key: 'settings-hint', defaultValue: false });
+  const [settings, setSettings] = useLocalStorage<Settings>({
+    key: 'settings',
+    defaultValue: { hint: false, counter: false },
+  });
 
   const refresh = () => {
     setMatched(false);
@@ -78,11 +87,18 @@ export function Notes() {
                 </ActionIcon>
               </Popover.Target>
               <Popover.Dropdown>
-                <Checkbox
-                  checked={hint}
-                  onChange={(e) => setHint(e.currentTarget.checked)}
-                  label="Frequency Hint"
-                />
+                <Stack>
+                  <Checkbox
+                    checked={settings.hint}
+                    onChange={(e) => setSettings({ ...settings, hint: e.currentTarget.checked })}
+                    label="Frequency Hint"
+                  />
+                  <Checkbox
+                    checked={settings.counter}
+                    onChange={(e) => setSettings({ ...settings, counter: e.currentTarget.checked })}
+                    label="Counter"
+                  />
+                </Stack>
               </Popover.Dropdown>
             </Popover>
           </Group>
@@ -90,16 +106,19 @@ export function Notes() {
             <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
           </Group>
           <Divider size="md" />
-          <CapturedNote
-            color={matched ? 'green' : 'red'}
-            from={firstNoteFromRoster(roster)}
-            pause={paused}
-            altered={expected.altered}
-            setNote={setActual}
-            mapNote={tab === tabs.fixedDo ? toFixedDo : identity}
-            expectedNote={expected.spn}
-            hint={hint}
-          />
+          <Stack align="center" gap="xs">
+            <CapturedNote
+              color={matched ? 'green' : 'red'}
+              from={firstNoteFromRoster(roster)}
+              pause={paused}
+              altered={expected.altered}
+              setNote={setActual}
+              mapNote={tab === tabs.fixedDo ? toFixedDo : identity}
+              expectedNote={expected.spn}
+              hint={settings.hint}
+            />
+            {settings.counter && <Counter matched={matched} />}
+          </Stack>
         </Stack>
       </Tabs>
     </Container>
