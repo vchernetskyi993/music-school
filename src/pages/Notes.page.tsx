@@ -39,7 +39,8 @@ export function Notes() {
   const { tab } = useParams();
   const navigate = useNavigate();
   const [matched, setMatched] = useState<boolean>(false);
-  const roster = useRoster();
+  const soundTab = tab === tabs.sound;
+  const roster = useRoster({ requireSoundSupport: soundTab });
   const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
   const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
@@ -79,7 +80,7 @@ export function Notes() {
         </Tabs.List>
         <Stack gap="xs">
           <Group justify="center" m="md">
-            <NoteRoster />
+            <NoteRoster requireSoundSupport={soundTab} />
             <Popover>
               <Popover.Target>
                 <ActionIcon variant="transparent">
@@ -103,7 +104,7 @@ export function Notes() {
             </Popover>
           </Group>
           <Group justify="center" m="md">
-            <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
+            {roster && <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />}
           </Group>
           <Divider size="md" />
           <Stack align="center" gap="xs">
@@ -136,7 +137,7 @@ function Expected({
   paused: boolean;
   pause: (pause: boolean) => void;
 }) {
-  const player = usePlayer();
+  const player = usePlayer(note, tab === tabs.sound);
   switch (tab) {
     case tabs.spn:
       return <ExpectedNote note={note} />;
@@ -147,7 +148,7 @@ function Expected({
           size="xl"
           onClick={() => {
             pause(true);
-            player.playNote(note).then(() => pause(false));
+            player.playNote().then(() => pause(false));
           }}
           disabled={paused}
         >
