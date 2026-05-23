@@ -6,29 +6,6 @@ export enum Altered {
   Sharp,
 }
 
-const noteToSemitone: Record<string, number> = {
-  C: 0,
-  D: 2,
-  E: 4,
-  F: 5,
-  G: 7,
-  A: 9,
-  B: 11,
-};
-
-const spnRegex = /^([A-Ga-g])([#b]*)(-?\d+)$/;
-
-export function spnToMidi(note: string): number {
-  const match = spnRegex.exec(note);
-  const [, letter, accidentals, octave] = match!;
-  const accidentalOffset = [...accidentals].reduce(
-    (offset, accidental) => offset + (accidental === '#' ? 1 : -1),
-    0
-  );
-  const midi = (Number(octave) + 1) * 12 + noteToSemitone[letter.toUpperCase()] + accidentalOffset;
-  return midi;
-}
-
 export function noteFromFrequency(frequency: number, altered: Altered): string {
   return altered === 1 ? TonalNote.fromFreqSharps(frequency) : TonalNote.fromFreq(frequency);
 }

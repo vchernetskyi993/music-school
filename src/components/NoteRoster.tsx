@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Group, Popover, Text, TextInput, Tooltip } from '@mantine/core';
 import { parseRosterInput, useRosterInput } from '@/hooks/roster';
 
@@ -5,10 +6,18 @@ const arrowSize = 10;
 const usage =
   "Supports either range (e.g., 'C3-E3') or comma-separated list of notes (e.g., 'C3,D3,E3')";
 
-export function NoteRoster({ requireSoundSupport = false }: { requireSoundSupport?: boolean }) {
-  const [input, setInput] = useRosterInput({ requireSoundSupport });
-  const parsed = parseRosterInput(input, { requireSoundSupport });
-  const error = typeof parsed === 'string' ? parsed : '';
+export function NoteRoster() {
+  const [input, setInput] = useRosterInput();
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const parsed = parseRosterInput(input);
+    if (typeof parsed === 'string') {
+      setError(parsed as string);
+    } else {
+      setError('');
+    }
+  }, [input]);
 
   return (
     <Group justify="center">
