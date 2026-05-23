@@ -27,3 +27,6 @@ There are dozens of applications that provide visual learning of notes, interval
     - It is recommended to run `verify` before each commit
 - `prettier:write` – formats all files with Prettier
 
+## Audio Credits
+
+Piano samples are adapted from [Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3) by Alexander Holm, licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).

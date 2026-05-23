@@ -42,6 +42,8 @@ export function firstNoteFromRoster(roster?: Roster | null): string {
 }
 
 const defaultRoster: Roster = { from: 'E2', to: 'E5' };
+const supportedMinHeight = TonalNote.get('A0').height;
+const supportedMaxHeight = TonalNote.get('C8').height;
 
 function useRosterInternal(): [Roster | null, string, (input: string) => void] {
   const [input, setInput] = useLocalStorage({
@@ -63,8 +65,12 @@ function rosterToString(roster: Roster): string {
 }
 
 function validateNote(note: string): string {
-  if (!TonalNote.get(note).freq) {
+  const parsed = TonalNote.get(note);
+  if (!parsed.freq || Number.isNaN(parsed.height)) {
     return `Invalid note '${note}'!`;
+  }
+  if (parsed.height < supportedMinHeight || parsed.height > supportedMaxHeight) {
+    return `Unsupported note '${note}'`;
   }
   return '';
 }

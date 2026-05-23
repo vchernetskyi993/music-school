@@ -136,7 +136,7 @@ function Expected({
   paused: boolean;
   pause: (pause: boolean) => void;
 }) {
-  const player = usePlayer();
+  const player = usePlayer(tab === tabs.sound ? note : undefined);
   switch (tab) {
     case tabs.spn:
       return <ExpectedNote note={note} />;
