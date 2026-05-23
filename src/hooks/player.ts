@@ -64,9 +64,8 @@ export function usePlayer(note: string, enabled: boolean): Player {
         throw Error(`Piano not loaded for note '${note}'`);
       }
 
-      await context.audio.resume();
-
       return new Promise((resolve) => {
+        void context.audio.resume().catch(() => {});
         loadedPiano.piano.start({ note, duration: 1, onEnded: () => resolve() });
       });
     },
