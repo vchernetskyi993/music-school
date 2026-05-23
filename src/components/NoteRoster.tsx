@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Group, Popover, Text, TextInput, Tooltip } from '@mantine/core';
 import { parseRosterInput, useRosterInput } from '@/hooks/roster';
 
@@ -8,16 +7,8 @@ const usage =
 
 export function NoteRoster() {
   const [input, setInput] = useRosterInput();
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const parsed = parseRosterInput(input);
-    if (typeof parsed === 'string') {
-      setError(parsed as string);
-    } else {
-      setError('');
-    }
-  }, [input]);
+  const parsed = parseRosterInput(input);
+  const error = typeof parsed === 'string' ? parsed : '';
 
   return (
     <Group justify="center">

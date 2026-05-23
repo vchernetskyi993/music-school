@@ -8,11 +8,13 @@ interface Player {
   playNote: (note: string) => Promise<void>;
 }
 
+const storage = new CacheStorage();
+
 export function usePlayer(): Player {
   const context = useOutletContext<ContextType | null>();
   const [loaded, setLoaded] = useState(false);
   const piano = useMemo(
-    () => context && new SplendidGrandPiano(context.audio, { storage: new CacheStorage() }),
+    () => context && new SplendidGrandPiano(context.audio, { storage }),
     [context]
   );
   useEffect(() => {
