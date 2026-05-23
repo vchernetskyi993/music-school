@@ -60,9 +60,11 @@ export function usePlayer(note: string, enabled: boolean): Player {
   return {
     loaded,
     async playNote() {
-      if (!loadedPiano || loadedPiano.note !== note) {
+      if (!context || !loadedPiano || loadedPiano.note !== note) {
         throw Error(`Piano not loaded for note '${note}'`);
       }
+
+      await context.audio.resume();
 
       return new Promise((resolve) => {
         loadedPiano.piano.start({ note, duration: 1, onEnded: () => resolve() });

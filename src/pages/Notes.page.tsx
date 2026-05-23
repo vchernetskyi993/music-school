@@ -148,7 +148,7 @@ function Expected({
           size="xl"
           onClick={() => {
             pause(true);
-            player.playNote().then(() => pause(false));
+            player.playNote().finally(() => pause(false));
           }}
           disabled={paused}
         >
