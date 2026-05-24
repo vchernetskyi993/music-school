@@ -65,3 +65,12 @@ export function toFixedDo(note: string): string {
     result
   );
 }
+
+export function getMidi(note: string): number | null {
+  return TonalNote.get(note).midi;
+}
+
+export function getFrequency(note: string): number | null {
+  return TonalNote.get(note).freq;
+}
+

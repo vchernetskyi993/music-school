@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Range, Note as TonalNote } from 'tonal';
 import { useLocalStorage } from '@mantine/hooks';
-import { Altered, arrayRosterFromRange, Note, randomNoteFromArray } from '@/utils/music';
+import { Altered, arrayRosterFromRange, getFrequency, getMidi, Note, randomNoteFromArray } from '@/utils/music';
 
 export type Roster = string[] | Range;
 export type Range = { from: string; to: string };
@@ -42,8 +41,6 @@ export function firstNoteFromRoster(roster?: Roster | null): string {
 }
 
 const defaultRoster: Roster = { from: 'E2', to: 'E5' };
-const supportedMinHeight = TonalNote.get('A0').height;
-const supportedMaxHeight = TonalNote.get('C8').height;
 
 function useRosterInternal(): [Roster | null, string, (input: string) => void] {
   const [input, setInput] = useLocalStorage({
@@ -65,18 +62,17 @@ function rosterToString(roster: Roster): string {
 }
 
 function validateNote(note: string): string {
-  const parsed = TonalNote.get(note);
-  if (!parsed.freq || Number.isNaN(parsed.height)) {
-    return `Invalid note '${note}'!`;
+  if (!getFrequency(note)) {
+    return `Invalid note '${note}'`;
   }
-  if (parsed.height < supportedMinHeight || parsed.height > supportedMaxHeight) {
+  if (!getMidi(note)) {
     return `Unsupported note '${note}'`;
   }
   return '';
 }
 
 function validateRange(from: string, to: string): string {
-  if (TonalNote.get(from).freq! > TonalNote.get(to).freq!) {
+  if (getFrequency(from)! > getFrequency(to)!) {
     return 'From should be smaller than to!';
   }
   return '';

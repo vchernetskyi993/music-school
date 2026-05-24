@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Howl } from 'howler';
-import { Note as TonalNote } from 'tonal';
+import { getMidi } from '@/utils/music';
 
 interface Player {
   loaded: boolean;
@@ -67,7 +67,7 @@ const samples: Sample[] = sampleDefinitions
   .map((sample) => ({
     ...sample,
     key: sample.file,
-    midi: midiOf(sample.note),
+    midi: getMidi(sample.note)!,
     url: `${sampleBaseUrl}${encodeURIComponent(sample.file)}`,
   }))
   .sort((a, b) => a.midi - b.midi);
@@ -113,8 +113,8 @@ export function usePlayer(note?: string): Player {
   };
 }
 
-export function playbackForNote(note: string): Playback {
-  const targetMidi = midiOf(note);
+function playbackForNote(note: string): Playback {
+  const targetMidi = getMidi(note)!;
   const sample = samples.reduce((nearest, sample) => {
     return Math.abs(sample.midi - targetMidi) < Math.abs(nearest.midi - targetMidi)
       ? sample
@@ -124,14 +124,6 @@ export function playbackForNote(note: string): Playback {
     rate: 2 ** ((targetMidi - sample.midi) / 12),
     sample,
   };
-}
-
-function midiOf(note: string): number {
-  const midi = TonalNote.get(note).midi;
-  if (typeof midi !== 'number') {
-    throw new Error(`Invalid note '${note}'`);
-  }
-  return midi;
 }
 
 function safePlaybackForNote(note: string): Playback | null {

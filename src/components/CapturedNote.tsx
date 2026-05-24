@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { identity } from 'rxjs';
-import { Note } from 'tonal';
 import { Loader, MantineColor, Stack, Text } from '@mantine/core';
 import { useSound } from '@/hooks/pitch';
 import { trimDecimal } from '@/utils/math';
-import { Altered, frequencyDiff, nextNote, noteFromFrequency } from '@/utils/music';
+import { Altered, frequencyDiff, getFrequency, nextNote, noteFromFrequency } from '@/utils/music';
 
 export function CapturedNote({
   color = 'grape',
@@ -29,7 +28,7 @@ export function CapturedNote({
 }) {
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
   const note = sound ? noteFromFrequency(sound, altered) : '';
-  const expectedFreq = expectedNote && Note.freq(expectedNote);
+  const expectedFreq = expectedNote && getFrequency(expectedNote);
   const diff = expectedFreq && sound && trimDecimal(sound - expectedFreq);
   useEffect(() => setNote(note), [note]);
   return (
