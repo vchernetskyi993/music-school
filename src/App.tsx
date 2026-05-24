@@ -1,6 +1,7 @@
 import '@mantine/core/styles.css';
 
 import { useEffect, useState } from 'react';
+import { IconBrandGithub } from '@tabler/icons-react';
 import { PitchDetector } from 'pitchy';
 import { Outlet } from 'react-router-dom';
 import {
@@ -8,7 +9,7 @@ import {
   IAudioContext,
   AudioContext as StandardizedAudioContext,
 } from 'standardized-audio-context';
-import { AppShell, Burger, Group, MantineProvider, Text, Title } from '@mantine/core';
+import { Anchor, AppShell, Burger, Group, MantineProvider, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from './components/NavBar';
 import { theme } from './theme';
@@ -45,7 +46,6 @@ export default function App() {
       <AppShell
         padding="md"
         header={{ height: { base: 60, md: 70, lg: 80 } }}
-        footer={{ height: 25 }}
         navbar={{
           width: 180,
           breakpoint: 'sm',
@@ -62,10 +62,20 @@ export default function App() {
         <AppShell.Main>
           <Outlet context={state} />
         </AppShell.Main>
-        <AppShell.Footer p={5}>
-          <Text ta="right" size="xs">
-            Build: {__COMMIT_HASH__}
-          </Text>
+        <AppShell.Footer p={2}>
+          <Anchor
+            href="https://github.com/vchernetskyi993/music-school"
+            c="gray"
+            size="xs"
+            target="blank"
+          >
+            <Group justify="right" gap={2} mr={2}>
+              <Text ta="right" size="sm">
+                {__COMMIT_HASH__}
+              </Text>
+              <IconBrandGithub />
+            </Group>
+          </Anchor>
         </AppShell.Footer>
       </AppShell>
     </MantineProvider>
