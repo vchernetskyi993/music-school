@@ -5,6 +5,7 @@ import { ActionIcon, Group, Paper, Stack, Title, Tooltip } from '@mantine/core';
 export function Counter({ matched }: { matched: boolean }) {
   const [count, setCount] = useState(0);
   const [paused, setPaused] = useState(true);
+  const color = paused ? 'gray' : 'green';
 
   useEffect(() => {
     if (matched && !paused) {
@@ -13,9 +14,16 @@ export function Counter({ matched }: { matched: boolean }) {
   }, [matched]);
 
   return (
-    <Stack align="center">
-      <Paper withBorder radius="lg" shadow="xs" p="xs" w={60}>
-        <Title order={3} c={paused ? 'dimmed' : 'green'} style={{ textAlign: 'center' }}>
+    <Stack align="center" gap="xs">
+      <Paper
+        withBorder
+        radius="md"
+        shadow="xs"
+        p={5}
+        w={80}
+        styles={{ root: { borderColor: color } }}
+      >
+        <Title order={3} c={color} style={{ textAlign: 'center' }}>
           {count}
         </Title>
       </Paper>
@@ -52,7 +60,7 @@ function Button({
 }) {
   return (
     <Tooltip label={label} color="gray">
-      <ActionIcon variant="light" size="xl" onClick={onClick}>
+      <ActionIcon variant="light" size="lg" onClick={onClick}>
         {children}
       </ActionIcon>
     </Tooltip>

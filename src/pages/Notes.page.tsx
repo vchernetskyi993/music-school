@@ -77,8 +77,8 @@ export function Notes() {
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
           <Tabs.Tab value={tabs.fixedDo}>Fixed Do</Tabs.Tab>
         </Tabs.List>
-        <Stack gap="xs">
-          <Group justify="center" m="md">
+        <Stack gap="md" m="sm">
+          <Group justify="center">
             <NoteRoster />
             <Popover>
               <Popover.Target>
@@ -102,23 +102,21 @@ export function Notes() {
               </Popover.Dropdown>
             </Popover>
           </Group>
-          <Group justify="center" m="md">
+          <Group justify="center">
             <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
           </Group>
           <Divider size="md" />
-          <Stack align="center" gap="xs">
-            <CapturedNote
-              color={matched ? 'green' : 'red'}
-              from={firstNoteFromRoster(roster)}
-              pause={paused}
-              altered={expected.altered}
-              setNote={setActual}
-              mapNote={tab === tabs.fixedDo ? toFixedDo : identity}
-              expectedNote={expected.spn}
-              hint={settings.hint}
-            />
-            {settings.counter && <Counter matched={matched} />}
-          </Stack>
+          <CapturedNote
+            color={matched ? 'green' : 'red'}
+            from={firstNoteFromRoster(roster)}
+            pause={paused}
+            altered={expected.altered}
+            setNote={setActual}
+            mapNote={tab === tabs.fixedDo ? toFixedDo : identity}
+            expectedNote={expected.spn}
+            hint={settings.hint}
+          />
+          {settings.counter && <Counter matched={matched} />}
         </Stack>
       </Tabs>
     </Container>
