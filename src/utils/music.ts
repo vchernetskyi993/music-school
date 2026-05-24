@@ -73,4 +73,3 @@ export function getMidi(note: string): number | null {
 export function getFrequency(note: string): number | null {
   return TonalNote.get(note).freq;
 }
-

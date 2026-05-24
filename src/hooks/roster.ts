@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
-import { Altered, arrayRosterFromRange, getFrequency, getMidi, Note, randomNoteFromArray } from '@/utils/music';
+import {
+  Altered,
+  arrayRosterFromRange,
+  getFrequency,
+  getMidi,
+  Note,
+  randomNoteFromArray,
+} from '@/utils/music';
 
 export type Roster = string[] | Range;
 export type Range = { from: string; to: string };
