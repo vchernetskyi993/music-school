@@ -25,8 +25,8 @@ type Playback = {
   sample: Sample;
 };
 
-const noteDurationMs = 1000;
-const fadeDurationMs = 100;
+const noteDurationMs = 1500;
+const fadeDurationMs = 800;
 const sampleBaseUrl =
   'https://cdn.jsdelivr.net/npm/@audio-samples/piano-mp3-velocity8@1.0.5/audio/';
 
