@@ -17,6 +17,7 @@ import {
 import { useLocalStorage } from '@mantine/hooks';
 import { CapturedNote } from '@/components/CapturedNote';
 import { Counter } from '@/components/Counter';
+import { ExpectedStaff } from '@/components/ExpectedStaff';
 import { pages } from '@/components/NavBar';
 import { NoteRoster } from '@/components/NoteRoster';
 import { usePlayer } from '@/hooks/player';
@@ -28,6 +29,7 @@ const tabs = {
   spn: 'spn',
   sound: 'sound',
   fixedDo: 'fixed-do',
+  staff: 'staff',
 };
 
 type Settings = {
@@ -76,6 +78,7 @@ export function Notes() {
           <Tabs.Tab value={tabs.spn}>SPN</Tabs.Tab>
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
           <Tabs.Tab value={tabs.fixedDo}>Fixed Do</Tabs.Tab>
+          <Tabs.Tab value={tabs.staff}>Staff</Tabs.Tab>
         </Tabs.List>
         <Stack gap="md" m="sm">
           <Group justify="center">
@@ -157,6 +160,8 @@ function Expected({
     }
     case tabs.fixedDo:
       return <ExpectedNote note={toFixedDo(note)} />;
+    case tabs.staff:
+      return <ExpectedStaff note={note} />;
     default:
       throw Error(`Unsupported tab ${tab}`);
   }

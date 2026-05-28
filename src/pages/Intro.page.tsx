@@ -55,6 +55,10 @@ export function Intro() {
           </a>
           .
         </ListItem>
+        <ListItem>
+          <b>Staff</b> - expected note on a{' '}
+          <a href="https://en.wikipedia.org/wiki/Staff_(music)">musical staff</a>.
+        </ListItem>
       </List>
     </Stack>
   );
