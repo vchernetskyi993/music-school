@@ -75,8 +75,8 @@ const samples: Sample[] = sampleDefinitions
 const loadedSamples = new Map<string, Howl>();
 const loadingSamples = new Map<string, Promise<Howl>>();
 
-export function usePlayer(note?: string): Player {
-  const playback = useMemo(() => (note ? safePlaybackForNote(note) : null), [note]);
+export function usePlayer(note: string): Player {
+  const playback = useMemo(() => safePlaybackForNote(note), [note]);
   const [loaded, setLoaded] = useState(() =>
     playback ? loadedSamples.has(playback.sample.key) : false
   );

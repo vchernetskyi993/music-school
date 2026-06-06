@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IconPlayerPlay, IconSettings } from '@tabler/icons-react';
+import { IconSettings } from '@tabler/icons-react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { identity } from 'rxjs';
 import {
@@ -8,7 +8,6 @@ import {
   Container,
   Divider,
   Group,
-  Loader,
   Popover,
   Select,
   Stack,
@@ -18,11 +17,11 @@ import {
 import { useLocalStorage } from '@mantine/hooks';
 import { CapturedNote } from '@/components/CapturedNote';
 import { Counter } from '@/components/Counter';
+import { ExpectedSound } from '@/components/ExpectedSound';
 import { ExpectedStaff } from '@/components/ExpectedStaff';
 import { pages } from '@/components/NavBar';
 import { NoteRoster } from '@/components/NoteRoster';
 import { useCounter } from '@/hooks/counter';
-import { usePlayer } from '@/hooks/player';
 import { firstNoteFromRoster, randomNoteFromRoster, useRoster } from '@/hooks/roster';
 import { toFixedDo } from '@/utils/music';
 
@@ -151,27 +150,11 @@ function Expected({
   paused: boolean;
   pause: (pause: boolean) => void;
 }) {
-  const player = usePlayer(tab === tabs.sound ? note : undefined);
   switch (tab) {
     case tabs.text:
       return <ExpectedNote note={notation === 'SPN' ? note : toFixedDo(note)} />;
-    case tabs.sound: {
-      return player.loaded ? (
-        <ActionIcon
-          variant="light"
-          size="xl"
-          onClick={() => {
-            pause(true);
-            player.playNote(note).then(() => pause(false));
-          }}
-          disabled={paused}
-        >
-          <IconPlayerPlay />
-        </ActionIcon>
-      ) : (
-        <Loader />
-      );
-    }
+    case tabs.sound:
+      return <ExpectedSound note={note} paused={paused} pause={pause} />;
     case tabs.staff:
       return <ExpectedStaff note={note} />;
     default:
