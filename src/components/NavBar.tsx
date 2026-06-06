@@ -7,7 +7,7 @@ type Link = { to: string; label: string; params?: { [key: string]: string } };
 export const pages: { [key: string]: Link } = {
   intro: { to: '/intro', label: 'Introduction' },
   visualize: { to: '/visualize', label: 'Visualize Note' },
-  studyNotes: { to: '/notes/:tab', params: { tab: 'spn' }, label: 'Study Notes' },
+  studyNotes: { to: '/notes/:tab', params: { tab: 'text' }, label: 'Study Notes' },
 };
 
 const links = [pages.intro, pages.visualize, pages.studyNotes];

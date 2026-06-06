@@ -10,6 +10,7 @@ import {
   Group,
   Loader,
   Popover,
+  Select,
   Stack,
   Tabs,
   Title,
@@ -26,15 +27,17 @@ import { firstNoteFromRoster, randomNoteFromRoster, useRoster } from '@/hooks/ro
 import { toFixedDo } from '@/utils/music';
 
 const tabs = {
-  spn: 'spn',
+  text: 'text',
   sound: 'sound',
-  fixedDo: 'fixed-do',
   staff: 'staff',
 };
+
+type Notation = 'SPN' | 'Fixed Do';
 
 type Settings = {
   hint: boolean;
   counter: boolean;
+  notation: Notation;
 };
 
 export function Notes() {
@@ -47,7 +50,7 @@ export function Notes() {
   const [actual, setActual] = useState('');
   const [settings, setSettings] = useLocalStorage<Settings>({
     key: 'settings',
-    defaultValue: { hint: false, counter: false },
+    defaultValue: { hint: false, counter: false, notation: 'SPN' },
   });
 
   const refresh = () => {
@@ -72,9 +75,8 @@ export function Notes() {
         }}
       >
         <Tabs.List>
-          <Tabs.Tab value={tabs.spn}>SPN</Tabs.Tab>
+          <Tabs.Tab value={tabs.text}>Text</Tabs.Tab>
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
-          <Tabs.Tab value={tabs.fixedDo}>Fixed Do</Tabs.Tab>
           <Tabs.Tab value={tabs.staff}>Staff</Tabs.Tab>
         </Tabs.List>
         <Stack gap="md" m="sm">
@@ -98,12 +100,26 @@ export function Notes() {
                     onChange={(e) => setSettings({ ...settings, counter: e.currentTarget.checked })}
                     label="Counter"
                   />
+                  {tab === 'text' && (
+                    <Select<Notation>
+                      label="Notation"
+                      value={settings.notation}
+                      data={['SPN', 'Fixed Do']}
+                      onChange={(value) => setSettings({ ...settings, notation: value! })}
+                    />
+                  )}
                 </Stack>
               </Popover.Dropdown>
             </Popover>
           </Group>
           <Group justify="center">
-            <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
+            <Expected
+              tab={tab!}
+              note={expected.spn}
+              textNotationType={settings.notation}
+              paused={paused}
+              pause={pause}
+            />
           </Group>
           <Divider size="md" />
           <CapturedNote
@@ -111,7 +127,7 @@ export function Notes() {
             pause={paused}
             altered={expected.altered}
             setNote={setActual}
-            mapNote={tab === tabs.fixedDo ? toFixedDo : identity}
+            mapNote={settings.notation === 'Fixed Do' ? toFixedDo : identity}
             expectedNote={expected.spn}
             hint={settings.hint}
           />
@@ -125,18 +141,20 @@ export function Notes() {
 function Expected({
   tab,
   note,
+  textNotationType,
   paused,
   pause,
 }: {
   tab: string;
   note: string;
+  textNotationType: Notation;
   paused: boolean;
   pause: (pause: boolean) => void;
 }) {
   const player = usePlayer(tab === tabs.sound ? note : undefined);
   switch (tab) {
-    case tabs.spn:
-      return <ExpectedNote note={note} />;
+    case tabs.text:
+      return <ExpectedNote note={textNotationType === 'SPN' ? note : toFixedDo(note)} />;
     case tabs.sound: {
       return player.loaded ? (
         <ActionIcon
@@ -154,8 +172,6 @@ function Expected({
         <Loader />
       );
     }
-    case tabs.fixedDo:
-      return <ExpectedNote note={toFixedDo(note)} />;
     case tabs.staff:
       return <ExpectedStaff note={note} />;
     default:

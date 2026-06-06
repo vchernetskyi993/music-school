@@ -39,21 +39,15 @@ export function Intro() {
       <Text>Expectations can be represented in the following formats:</Text>
       <List withPadding>
         <ListItem>
-          <b>SPN</b> -{' '}
+          <b>Text</b> - either{' '}
           <a href="https://en.wikipedia.org/wiki/Scientific_pitch_notation">
-            scientific pitch notation
-          </a>
-          .
+            Scientific Pitch Notation (SPN)
+          </a>{' '}
+          or <a href="https://en.wikipedia.org/wiki/Solf%C3%A8ge#Fixed_do_solf%C3%A8ge">Fixed Do</a>{' '}
+          solfège.
         </ListItem>
         <ListItem>
           <b>Sound</b> - playable audio.
-        </ListItem>
-        <ListItem>
-          <b>Fixed Do</b> -{' '}
-          <a href="https://en.wikipedia.org/wiki/Solf%C3%A8ge#Fixed_do_solf%C3%A8ge">
-            fixed do solfège
-          </a>
-          .
         </ListItem>
         <ListItem>
           <b>Staff</b> - expected note on a{' '}
