@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import { identity } from 'rxjs';
-import { Loader, MantineColor, Stack, Text } from '@mantine/core';
+import { Loader, Stack, Text } from '@mantine/core';
 import { useSound } from '@/hooks/pitch';
 import { trimDecimal } from '@/utils/math';
 import { Altered, frequencyDiff, getFrequency, nextNote, noteFromFrequency } from '@/utils/music';
 
 export function CapturedNote({
-  color = 'grape',
   from = 'E2',
   pause = false,
   altered = Altered.Sharp,
@@ -17,7 +16,6 @@ export function CapturedNote({
   hint = false,
 }: {
   from?: string;
-  color?: MantineColor;
   pause?: boolean;
   altered?: Altered;
   showFrequency?: boolean;
@@ -34,7 +32,7 @@ export function CapturedNote({
   return (
     <Stack gap="xs" align="center">
       {note && (
-        <Text c={color} ta="center" size="xl">
+        <Text c="grape" ta="center" size="xl">
           {mapNote(note)} {hint && diff && (diff < 0 ? '' : '+') + diff}
         </Text>
       )}

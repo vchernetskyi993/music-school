@@ -20,9 +20,9 @@ import { Counter } from '@/components/Counter';
 import { ExpectedStaff } from '@/components/ExpectedStaff';
 import { pages } from '@/components/NavBar';
 import { NoteRoster } from '@/components/NoteRoster';
+import { useCounter } from '@/hooks/counter';
 import { usePlayer } from '@/hooks/player';
 import { firstNoteFromRoster, randomNoteFromRoster, useRoster } from '@/hooks/roster';
-import { delay } from '@/utils/async';
 import { toFixedDo } from '@/utils/music';
 
 const tabs = {
@@ -40,7 +40,7 @@ type Settings = {
 export function Notes() {
   const { tab } = useParams();
   const navigate = useNavigate();
-  const [matched, setMatched] = useState<boolean>(false);
+  const counter = useCounter();
   const roster = useRoster();
   const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
   const [paused, pause] = useState(false);
@@ -51,20 +51,17 @@ export function Notes() {
   });
 
   const refresh = () => {
-    setMatched(false);
     pause(false);
     setExpected(randomNoteFromRoster(roster, expected.spn));
   };
 
   useEffect(refresh, [roster]);
   useEffect(() => {
-    if (!matched && actual === expected.spn) {
-      // console.log(`State is expected: ${state.expected}`);
-      setMatched(true);
-      pause(true);
-      delay(1000).then(refresh);
+    if (actual === expected.spn) {
+      counter.increment();
+      refresh();
     }
-  }, [actual]);
+  }, [actual, expected.spn]);
   return (
     <Container fluid>
       <Tabs
@@ -110,7 +107,6 @@ export function Notes() {
           </Group>
           <Divider size="md" />
           <CapturedNote
-            color={matched ? 'green' : 'red'}
             from={firstNoteFromRoster(roster)}
             pause={paused}
             altered={expected.altered}
@@ -119,7 +115,7 @@ export function Notes() {
             expectedNote={expected.spn}
             hint={settings.hint}
           />
-          {settings.counter && <Counter matched={matched} />}
+          {settings.counter && <Counter counter={counter} />}
         </Stack>
       </Tabs>
     </Container>

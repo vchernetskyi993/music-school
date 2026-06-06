@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { IconPlayerPause, IconPlayerPlay, IconRestore } from '@tabler/icons-react';
 import { ActionIcon, Group, Paper, Stack, Text, Title, Tooltip } from '@mantine/core';
+import { ICounter } from '@/hooks/counter';
 import { formatCountPerMinute } from '@/utils/rate';
 import { formatDuration } from '@/utils/time';
 
-export function Counter({ matched }: { matched: boolean }) {
-  const [count, setCount] = useState(0);
+export function Counter({ counter }: { counter: ICounter }) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [paused, setPaused] = useState(true);
   const elapsedTime = formatDuration(elapsedSeconds);
-  const countPerMinute = formatCountPerMinute(count, elapsedSeconds);
+  const countPerMinute = formatCountPerMinute(counter.count, elapsedSeconds);
 
   useEffect(() => {
-    if (matched && !paused) {
-      setCount((c) => c + 1);
-    }
-  }, [matched]);
-
-  useEffect(() => {
-    if (paused) {
+    if (counter.paused) {
       return;
     }
 
@@ -27,7 +20,7 @@ export function Counter({ matched }: { matched: boolean }) {
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, [paused]);
+  }, [counter.paused]);
 
   return (
     <Stack align="center" gap="xs" w="100%">
@@ -36,7 +29,7 @@ export function Counter({ matched }: { matched: boolean }) {
         radius="md"
         shadow="xs"
         p={5}
-        styles={{ root: { borderColor: paused ? 'gray' : 'cornflowerblue' } }}
+        styles={{ root: { borderColor: counter.paused ? 'gray' : 'cornflowerblue' } }}
       >
         <Group gap="xs" wrap="nowrap">
           <StyledTooltip label="Elapsed time">
@@ -46,7 +39,7 @@ export function Counter({ matched }: { matched: boolean }) {
           </StyledTooltip>
           <StyledTooltip label="Total count">
             <Title order={3} c="gray">
-              {count}
+              {counter.count}
             </Title>
           </StyledTooltip>
           <StyledTooltip label="Count per minute">
@@ -58,14 +51,14 @@ export function Counter({ matched }: { matched: boolean }) {
       </Paper>
 
       <Group>
-        {paused && (
-          <Button label="Start counting" onClick={() => setPaused(false)}>
+        {counter.paused && (
+          <Button label="Start counting" onClick={() => counter.start()}>
             <IconPlayerPlay />
           </Button>
         )}
 
-        {!paused && (
-          <Button label="Pause counting" onClick={() => setPaused(true)}>
+        {!counter.paused && (
+          <Button label="Pause counting" onClick={() => counter.pause()}>
             <IconPlayerPause />
           </Button>
         )}
@@ -73,7 +66,7 @@ export function Counter({ matched }: { matched: boolean }) {
         <Button
           label="Reset counter"
           onClick={() => {
-            setCount(0);
+            counter.reset();
             setElapsedSeconds(0);
           }}
         >
