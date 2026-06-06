@@ -116,7 +116,7 @@ export function Notes() {
             <Expected
               tab={tab!}
               note={expected.spn}
-              textNotationType={settings.notation}
+              notation={settings.notation}
               paused={paused}
               pause={pause}
             />
@@ -141,20 +141,20 @@ export function Notes() {
 function Expected({
   tab,
   note,
-  textNotationType,
+  notation,
   paused,
   pause,
 }: {
   tab: string;
   note: string;
-  textNotationType: Notation;
+  notation: Notation;
   paused: boolean;
   pause: (pause: boolean) => void;
 }) {
   const player = usePlayer(tab === tabs.sound ? note : undefined);
   switch (tab) {
     case tabs.text:
-      return <ExpectedNote note={textNotationType === 'SPN' ? note : toFixedDo(note)} />;
+      return <ExpectedNote note={notation === 'SPN' ? note : toFixedDo(note)} />;
     case tabs.sound: {
       return player.loaded ? (
         <ActionIcon
