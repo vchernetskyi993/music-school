@@ -127,7 +127,7 @@ export function Notes() {
             pause={paused}
             altered={expected.altered}
             setNote={setActual}
-            mapNote={settings.notation === 'Fixed Do' ? toFixedDo : identity}
+            mapNote={settings.notation === 'SPN' ? identity : toFixedDo}
             expectedNote={expected.spn}
             hint={settings.hint}
           />
