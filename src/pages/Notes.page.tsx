@@ -74,7 +74,7 @@ export function Notes() {
           refresh();
         }}
       >
-        <Tabs.List>
+        <Tabs.List justify="center">
           <Tabs.Tab value={tabs.text}>Text</Tabs.Tab>
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
           <Tabs.Tab value={tabs.staff}>Staff</Tabs.Tab>
