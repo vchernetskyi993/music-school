@@ -32,7 +32,7 @@ export function CapturedNote({
   return (
     <Stack gap="xs" align="center">
       {note && (
-        <Text c="grape" ta="center" size="xl">
+        <Text c="blue" ta="center" size="xl">
           {mapNote(note)} {hint && diff && (diff < 0 ? '' : '+') + diff}
         </Text>
       )}
