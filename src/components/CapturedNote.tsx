@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useWakeLock } from 'react-screen-wake-lock';
 import { identity } from 'rxjs';
 import { Loader, Stack, Text } from '@mantine/core';
 import { useSound } from '@/hooks/pitch';
@@ -28,6 +29,13 @@ export function CapturedNote({
   const note = sound ? noteFromFrequency(sound, altered) : '';
   const expectedFreq = expectedNote && getFrequency(expectedNote);
   const diff = expectedFreq && sound && trimDecimal(sound - expectedFreq);
+  const wakeLock = useWakeLock({ reacquireOnPageVisible: true });
+  useEffect(() => {
+    void wakeLock.request();
+    return () => {
+      void wakeLock.release();
+    };
+  }, []);
   useEffect(() => setNote(note), [note]);
   return (
     <Stack gap="xs" align="center">
