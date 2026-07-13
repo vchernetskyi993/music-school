@@ -28,11 +28,12 @@ export function Intro() {
           instrument.
         </ListItem>
         <ListItem>
-          <Link to={generatePath(pages.studyNotes.to, pages.studyNotes.params)}>
-            {pages.studyNotes.label}
-          </Link>{' '}
-          - play a note displayed on the screen. Useful to learn positions of single notes on the
+          <Link to={generatePath(pages.notes.to, pages.notes.params)}>{pages.notes.label}</Link> -
+          play a note displayed on the screen. Useful to learn positions of single notes on the
           instrument.
+        </ListItem>
+        <ListItem>
+          <Link to={pages.intervals.to}>{pages.intervals.label}</Link> - play a pair of notes.
         </ListItem>
       </List>
       <Title order={2}>Study Modes</Title>

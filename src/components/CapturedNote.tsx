@@ -3,28 +3,35 @@ import { useWakeLock } from 'react-screen-wake-lock';
 import { identity } from 'rxjs';
 import { Loader, Stack, Text } from '@mantine/core';
 import { useSound } from '@/hooks/pitch';
+import { firstNoteFromRoster, useRoster } from '@/hooks/roster';
+import { useSettings } from '@/hooks/settings';
 import { trimDecimal } from '@/utils/math';
-import { Altered, frequencyDiff, getFrequency, nextNote, noteFromFrequency } from '@/utils/music';
+import {
+  Altered,
+  frequencyDiff,
+  getFrequency,
+  nextNote,
+  noteFromFrequency,
+  toFixedDo,
+} from '@/utils/music';
 
 export function CapturedNote({
-  from = 'E2',
   pause = false,
   altered = Altered.Sharp,
   showFrequency = false,
   setNote = () => {},
-  mapNote = identity,
   expectedNote = undefined,
-  hint = false,
 }: {
-  from?: string;
   pause?: boolean;
   altered?: Altered;
   showFrequency?: boolean;
   setNote?: (note: string) => void;
-  mapNote?: (note: string) => string;
   expectedNote?: string;
-  hint?: boolean;
 }) {
+  const settings = useSettings();
+  const mapNote = settings.notation === 'Fixed Do' ? toFixedDo : identity;
+  const roster = useRoster();
+  const from = firstNoteFromRoster(roster) || 'E2';
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
   const note = sound ? noteFromFrequency(sound, altered) : '';
   const expectedFreq = expectedNote && getFrequency(expectedNote);
@@ -41,7 +48,7 @@ export function CapturedNote({
     <Stack gap="xs" align="center">
       {note && (
         <Text c="blue" ta="center" size="xl">
-          {mapNote(note)} {hint && diff && (diff < 0 ? '' : '+') + diff}
+          {mapNote(note)} {settings.hint && diff && (diff < 0 ? '' : '+') + diff}
         </Text>
       )}
       {sound && showFrequency && (

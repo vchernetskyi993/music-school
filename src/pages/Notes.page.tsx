@@ -1,42 +1,21 @@
 import { useEffect, useState } from 'react';
-import { IconSettings } from '@tabler/icons-react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
-import { identity } from 'rxjs';
-import {
-  Button,
-  Checkbox,
-  Container,
-  Divider,
-  Group,
-  Popover,
-  Select,
-  Stack,
-  Tabs,
-  Title,
-} from '@mantine/core';
-import { useLocalStorage } from '@mantine/hooks';
+import { Container, Divider, Group, Stack, Tabs, Title } from '@mantine/core';
 import { CapturedNote } from '@/components/CapturedNote';
 import { Counter } from '@/components/Counter';
 import { ExpectedSound } from '@/components/ExpectedSound';
 import { ExpectedStaff } from '@/components/ExpectedStaff';
 import { pages } from '@/components/NavBar';
-import { NoteRoster } from '@/components/NoteRoster';
+import { Settings } from '@/components/Settings';
 import { useCounter } from '@/hooks/counter';
-import { firstNoteFromRoster, randomNoteFromRoster, useRoster } from '@/hooks/roster';
+import { randomNoteFromRoster, useRoster } from '@/hooks/roster';
+import { useSettings } from '@/hooks/settings';
 import { toFixedDo } from '@/utils/music';
 
 const tabs = {
   text: 'text',
   sound: 'sound',
   staff: 'staff',
-};
-
-type Notation = 'SPN' | 'Fixed Do';
-
-type Settings = {
-  hint: boolean;
-  counter: boolean;
-  notation: Notation;
 };
 
 export function Notes() {
@@ -47,10 +26,7 @@ export function Notes() {
   const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
   const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
-  const [settings, setSettings] = useLocalStorage<Settings>({
-    key: 'settings',
-    defaultValue: { hint: false, counter: false, notation: 'SPN' },
-  });
+  const settings = useSettings();
 
   const refresh = () => {
     pause(false);
@@ -69,7 +45,7 @@ export function Notes() {
       <Tabs
         value={tab}
         onChange={(tab) => {
-          navigate(generatePath(pages.studyNotes.to, { tab }));
+          navigate(generatePath(pages.notes.to, { tab }));
           refresh();
         }}
       >
@@ -79,56 +55,16 @@ export function Notes() {
           <Tabs.Tab value={tabs.staff}>Staff</Tabs.Tab>
         </Tabs.List>
         <Stack gap="md" m="sm">
+          <Settings notation={tab === 'text'} />
           <Group justify="center">
-            <Popover>
-              <Popover.Target>
-                <Button size="lg" variant="transparent" leftSection={<IconSettings />}>
-                  Settings
-                </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <Stack>
-                  <NoteRoster />
-                  <Checkbox
-                    checked={settings.hint}
-                    onChange={(e) => setSettings({ ...settings, hint: e.currentTarget.checked })}
-                    label="Frequency Hint"
-                  />
-                  <Checkbox
-                    checked={settings.counter}
-                    onChange={(e) => setSettings({ ...settings, counter: e.currentTarget.checked })}
-                    label="Counter"
-                  />
-                  {tab === 'text' && (
-                    <Select<Notation>
-                      label="Notation"
-                      value={settings.notation}
-                      data={['SPN', 'Fixed Do']}
-                      onChange={(value) => setSettings({ ...settings, notation: value! })}
-                    />
-                  )}
-                </Stack>
-              </Popover.Dropdown>
-            </Popover>
-          </Group>
-          <Group justify="center">
-            <Expected
-              tab={tab!}
-              note={expected.spn}
-              notation={settings.notation}
-              paused={paused}
-              pause={pause}
-            />
+            <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
           </Group>
           <Divider size="md" />
           <CapturedNote
-            from={firstNoteFromRoster(roster)}
             pause={paused}
             altered={expected.altered}
             setNote={setActual}
-            mapNote={settings.notation === 'SPN' ? identity : toFixedDo}
             expectedNote={expected.spn}
-            hint={settings.hint}
           />
           {settings.counter && <Counter counter={counter} />}
         </Stack>
@@ -140,19 +76,18 @@ export function Notes() {
 function Expected({
   tab,
   note,
-  notation,
   paused,
   pause,
 }: {
   tab: string;
   note: string;
-  notation: Notation;
   paused: boolean;
   pause: (pause: boolean) => void;
 }) {
+  const settings = useSettings();
   switch (tab) {
     case tabs.text:
-      return <ExpectedNote note={notation === 'SPN' ? note : toFixedDo(note)} />;
+      return <ExpectedNote note={settings.notation === 'SPN' ? note : toFixedDo(note)} />;
     case tabs.sound:
       return <ExpectedSound note={note} paused={paused} pause={pause} />;
     case tabs.staff:

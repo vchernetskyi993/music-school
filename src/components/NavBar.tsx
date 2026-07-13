@@ -6,11 +6,12 @@ type Link = { to: string; label: string; params?: { [key: string]: string } };
 
 export const pages: { [key: string]: Link } = {
   intro: { to: '/intro', label: 'Introduction' },
-  visualize: { to: '/visualize', label: 'Visualize Note' },
-  studyNotes: { to: '/notes/:tab', params: { tab: 'text' }, label: 'Study Notes' },
+  visualize: { to: '/visualize', label: 'Visualizer' },
+  notes: { to: '/notes/:tab', params: { tab: 'text' }, label: 'Notes' },
+  intervals: { to: '/intervals', label: 'Intervals' },
 };
 
-const links = [pages.intro, pages.visualize, pages.studyNotes];
+const links = [pages.intro, pages.visualize, pages.notes, pages.intervals];
 
 export function NavBar({ toggle }: { toggle: () => void }) {
   const navigate = useNavigate();

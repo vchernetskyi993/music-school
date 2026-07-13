@@ -8,6 +8,7 @@ const usage =
 export function NoteRoster() {
   const [input, setInput] = useRosterInput();
   const parsed = parseRosterInput(input);
+  // TODO: support intervals page (notes count should be >= 2)
   const error = typeof parsed === 'string' ? parsed : '';
 
   return (
