@@ -3,7 +3,7 @@ import { IconSettings } from '@tabler/icons-react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { identity } from 'rxjs';
 import {
-  ActionIcon,
+  Button,
   Checkbox,
   Container,
   Divider,
@@ -80,15 +80,15 @@ export function Notes() {
         </Tabs.List>
         <Stack gap="md" m="sm">
           <Group justify="center">
-            <NoteRoster />
             <Popover>
               <Popover.Target>
-                <ActionIcon variant="transparent">
-                  <IconSettings />
-                </ActionIcon>
+                <Button size="lg" variant="transparent" leftSection={<IconSettings />}>
+                  Settings
+                </Button>
               </Popover.Target>
               <Popover.Dropdown>
                 <Stack>
+                  <NoteRoster />
                   <Checkbox
                     checked={settings.hint}
                     onChange={(e) => setSettings({ ...settings, hint: e.currentTarget.checked })}

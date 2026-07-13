@@ -1,4 +1,4 @@
-import { Group, Popover, Text, TextInput, Tooltip } from '@mantine/core';
+import { Popover, TextInput, Tooltip } from '@mantine/core';
 import { parseRosterInput, useRosterInput } from '@/hooks/roster';
 
 const arrowSize = 10;
@@ -11,20 +11,18 @@ export function NoteRoster() {
   const error = typeof parsed === 'string' ? parsed : '';
 
   return (
-    <Group justify="center">
-      <Text>Notes:</Text>
-      <Popover opened={!!error} withArrow arrowSize={arrowSize}>
-        <Popover.Target>
-          <Tooltip label={usage} multiline>
-            <TextInput
-              value={input}
-              error={!!error}
-              onChange={(event) => setInput(event.currentTarget.value)}
-            />
-          </Tooltip>
-        </Popover.Target>
-        <Popover.Dropdown c="red">{error}</Popover.Dropdown>
-      </Popover>
-    </Group>
+    <Popover opened={!!error} withArrow arrowSize={arrowSize}>
+      <Popover.Target>
+        <Tooltip label={usage} multiline>
+          <TextInput
+            value={input}
+            error={!!error}
+            onChange={(event) => setInput(event.currentTarget.value)}
+            label="Notes"
+          />
+        </Tooltip>
+      </Popover.Target>
+      <Popover.Dropdown c="red">{error}</Popover.Dropdown>
+    </Popover>
   );
 }
