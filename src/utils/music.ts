@@ -1,13 +1,15 @@
 import { Range, Note as TonalNote } from 'tonal';
 import { randomInt } from './math';
 
-export enum Altered {
+export enum Alteration {
   Flat = 0,
   Sharp,
 }
 
-export function noteFromFrequency(frequency: number, altered: Altered): string {
-  return altered === 1 ? TonalNote.fromFreqSharps(frequency) : TonalNote.fromFreq(frequency);
+export function noteFromFrequency(frequency: number, alteration: Alteration): string {
+  return alteration === Alteration.Sharp
+    ? TonalNote.fromFreqSharps(frequency)
+    : TonalNote.fromFreq(frequency);
 }
 
 export function nextNote(note: string): string {
@@ -21,20 +23,17 @@ export function frequencyDiff(from: string, to: string): number {
   return Math.round(diff * 100) / 100;
 }
 
-export type Note = { spn: string; altered: Altered };
+export function getAlteration(note: string): Alteration {
+  return note.includes('b') ? Alteration.Flat : Alteration.Sharp;
+}
 
-export function randomNoteFromArray(notes: string[], previous?: string): Note {
-  const altered = notes.find((note) => note.includes('b')) ? Altered.Flat : Altered.Sharp;
-  if (notes.length === 1) {
-    return { altered, spn: noteFromFrequency(TonalNote.get(notes[0]).freq!, altered) };
-  }
-
+export function randomNoteFromArray(notes: string[], previous?: string): string {
   const note = notes[randomInt(0, notes.length - 1)];
   if (previous && TonalNote.get(note).freq === TonalNote.get(previous).freq) {
     return randomNoteFromArray(notes, previous);
   }
 
-  return { altered, spn: note };
+  return note;
 }
 
 export function arrayRosterFromRange(from: string, to: string): string[] {

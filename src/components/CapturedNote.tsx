@@ -7,8 +7,9 @@ import { firstNoteFromRoster, useRoster } from '@/hooks/roster';
 import { useSettings } from '@/hooks/settings';
 import { trimDecimal } from '@/utils/math';
 import {
-  Altered,
+  Alteration,
   frequencyDiff,
+  getAlteration,
   getFrequency,
   nextNote,
   noteFromFrequency,
@@ -17,13 +18,11 @@ import {
 
 export function CapturedNote({
   pause = false,
-  altered = Altered.Sharp,
   showFrequency = false,
   setNote = () => {},
   expectedNote = undefined,
 }: {
   pause?: boolean;
-  altered?: Altered;
   showFrequency?: boolean;
   setNote?: (note: string) => void;
   expectedNote?: string;
@@ -33,7 +32,8 @@ export function CapturedNote({
   const roster = useRoster();
   const from = firstNoteFromRoster(roster) || 'E2';
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
-  const note = sound ? noteFromFrequency(sound, altered) : '';
+  const alteration = expectedNote ? getAlteration(expectedNote) : Alteration.Sharp;
+  const note = sound ? noteFromFrequency(sound, alteration) : '';
   const expectedFreq = expectedNote && getFrequency(expectedNote);
   const diff = expectedFreq && sound && trimDecimal(sound - expectedFreq);
   const wakeLock = useWakeLock({ reacquireOnPageVisible: true });

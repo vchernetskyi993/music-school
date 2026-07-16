@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
-import {
-  Altered,
-  arrayRosterFromRange,
-  getFrequency,
-  getMidi,
-  Note,
-  randomNoteFromArray,
-} from '@/utils/music';
+import { arrayRosterFromRange, getFrequency, getMidi, randomNoteFromArray } from '@/utils/music';
 
 export type Roster = string[] | Range;
 export type Range = { from: string; to: string };
@@ -31,13 +24,15 @@ export function parseRosterInput(input: string): Roster | string {
   return validateAlteration(input) || notes.map(validateNote).find((e) => !!e) || notes;
 }
 
-export function randomNoteFromRoster(roster?: Roster | null, previous?: string): Note {
+export function randomNoteFromRoster(roster?: Roster | null, previous?: string): string {
   if (!roster) {
-    return { spn: '', altered: Altered.Sharp };
+    return '';
   }
-  const normalizedRoster =
-    roster instanceof Array ? roster : arrayRosterFromRange(roster.from, roster.to);
-  return randomNoteFromArray(normalizedRoster, previous);
+  return randomNoteFromArray(rosterAsArray(roster), previous);
+}
+
+function rosterAsArray(roster: Roster): string[] {
+  return roster instanceof Array ? roster : arrayRosterFromRange(roster.from, roster.to);
 }
 
 export function firstNoteFromRoster(roster?: Roster | null): string {
