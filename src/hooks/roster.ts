@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
-import { arrayRosterFromRange, getFrequency, getMidi, randomNoteFromArray } from '@/utils/music';
+import {
+  Alteration,
+  arrayRosterFromRange,
+  getAlteration,
+  getFrequency,
+  getMidi,
+  isAltered,
+  randomAlteration,
+  randomNoteFromArray,
+} from '@/utils/music';
 
 export type Roster = string[] | Range;
 export type Range = { from: string; to: string };
@@ -24,15 +33,20 @@ export function parseRosterInput(input: string): Roster | string {
   return validateAlteration(input) || notes.map(validateNote).find((e) => !!e) || notes;
 }
 
-export function randomNoteFromRoster(roster?: Roster | null, previous?: string): string {
+export type Note = { alteration: Alteration; spn: string };
+
+export function randomNoteFromRoster(roster?: Roster | null, previous?: string): Note {
   if (!roster) {
-    return '';
+    return { spn: '', alteration: Alteration.Sharp };
   }
-  return randomNoteFromArray(rosterAsArray(roster), previous);
+  const alteration = previous && isAltered(previous) ? getAlteration(previous) : randomAlteration();
+  return { alteration, spn: randomNoteFromArray(rosterAsArray(roster, alteration), previous) };
 }
 
-function rosterAsArray(roster: Roster): string[] {
-  return roster instanceof Array ? roster : arrayRosterFromRange(roster.from, roster.to);
+function rosterAsArray(roster: Roster, alteration: Alteration): string[] {
+  return roster instanceof Array
+    ? roster
+    : arrayRosterFromRange(roster.from, roster.to, alteration);
 }
 
 export function firstNoteFromRoster(roster?: Roster | null): string {

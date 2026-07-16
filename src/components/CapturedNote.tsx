@@ -9,7 +9,6 @@ import { trimDecimal } from '@/utils/math';
 import {
   Alteration,
   frequencyDiff,
-  getAlteration,
   getFrequency,
   nextNote,
   noteFromFrequency,
@@ -21,18 +20,19 @@ export function CapturedNote({
   showFrequency = false,
   setNote = () => {},
   expectedNote = undefined,
+  alteration = Alteration.Sharp,
 }: {
   pause?: boolean;
   showFrequency?: boolean;
   setNote?: (note: string) => void;
   expectedNote?: string;
+  alteration?: Alteration;
 }) {
   const settings = useSettings();
   const mapNote = settings.notation === 'Fixed Do' ? toFixedDo : identity;
   const roster = useRoster();
   const from = firstNoteFromRoster(roster) || 'E2';
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
-  const alteration = expectedNote ? getAlteration(expectedNote) : Alteration.Sharp;
   const note = sound ? noteFromFrequency(sound, alteration) : '';
   const expectedFreq = expectedNote && getFrequency(expectedNote);
   const diff = expectedFreq && sound && trimDecimal(sound - expectedFreq);

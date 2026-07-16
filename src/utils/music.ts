@@ -4,12 +4,13 @@ import { randomInt } from './math';
 export enum Alteration {
   Flat = 0,
   Sharp,
+  None,
 }
 
 export function noteFromFrequency(frequency: number, alteration: Alteration): string {
-  return alteration === Alteration.Sharp
-    ? TonalNote.fromFreqSharps(frequency)
-    : TonalNote.fromFreq(frequency);
+  return alteration === Alteration.Flat
+    ? TonalNote.fromFreq(frequency)
+    : TonalNote.fromFreqSharps(frequency);
 }
 
 export function nextNote(note: string): string {
@@ -24,7 +25,19 @@ export function frequencyDiff(from: string, to: string): number {
 }
 
 export function getAlteration(note: string): Alteration {
-  return note.includes('b') ? Alteration.Flat : Alteration.Sharp;
+  return note.includes('b')
+    ? Alteration.Flat
+    : note.includes('#')
+      ? Alteration.Sharp
+      : Alteration.None;
+}
+
+export function isAltered(note: string): boolean {
+  return getAlteration(note) !== Alteration.None;
+}
+
+export function randomAlteration(): Alteration {
+  return Math.round(Math.random());
 }
 
 export function randomNoteFromArray(notes: string[], previous?: string): string {
@@ -36,9 +49,9 @@ export function randomNoteFromArray(notes: string[], previous?: string): string 
   return note;
 }
 
-export function arrayRosterFromRange(from: string, to: string): string[] {
-  const altered = Math.random() < 0.5;
-  return Range.chromatic([from, to], { sharps: altered });
+export function arrayRosterFromRange(from: string, to: string, alteration: Alteration): string[] {
+  const opts = alteration ? { sharps: true } : {};
+  return Range.chromatic([from, to], opts);
 }
 
 const fixedDoMapping: { [key: string]: string } = {

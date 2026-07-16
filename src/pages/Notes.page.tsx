@@ -30,12 +30,12 @@ export function Notes() {
 
   const refresh = () => {
     pause(false);
-    setExpected(randomNoteFromRoster(roster, expected));
+    setExpected(randomNoteFromRoster(roster, expected.spn));
   };
 
   useEffect(refresh, [roster]);
   useEffect(() => {
-    if (actual === expected) {
+    if (actual === expected.spn) {
       counter.increment();
       refresh();
     }
@@ -57,10 +57,15 @@ export function Notes() {
         <Stack gap="md" m="sm">
           <Settings notation={tab === 'text'} />
           <Group justify="center">
-            <Expected tab={tab!} note={expected} paused={paused} pause={pause} />
+            <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
           </Group>
           <Divider size="md" />
-          <CapturedNote pause={paused} setNote={setActual} expectedNote={expected} />
+          <CapturedNote
+            pause={paused}
+            setNote={setActual}
+            expectedNote={expected.spn}
+            alteration={expected.alteration}
+          />
           {settings.counter && <Counter counter={counter} />}
         </Stack>
       </Tabs>
