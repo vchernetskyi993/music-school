@@ -133,3 +133,6 @@ dist
 .pnp.*
 
 .DS_Store
+
+# Custom files
+/playground.ts
