@@ -1,4 +1,4 @@
-import { Interval, Range, Note as TonalNote } from 'tonal';
+import { Interval, IntervalType, Range, Note as TonalNote } from 'tonal';
 import { randomInt } from './math';
 
 export enum Alteration {
@@ -54,15 +54,26 @@ export function arrayRosterFromRange(from: string, to: string, alteration: Alter
   return Range.chromatic([from, to], opts);
 }
 
-export function enumerateIntervals(notes: string[]): { note: string; interval: string }[] {
+export type Pair = { from: string; to: string };
+
+export function enumerateIntervals(notes: string[]): Pair[] {
   return notes.flatMap((from) => {
     return notes
-      .map((to) => Interval.get(Interval.distance(from, to)))
-      .filter((interval) => interval.semitones >= 1)
-      .filter((interval) => interval.semitones <= 12)
-      .map((interval) => `${interval.q}${interval.num}`)
-      .map((interval) => ({ note: from, interval }));
+      .map((to) => ({ from, to }))
+      .filter((pair) => {
+        const semitones = tonalInterval(pair).semitones;
+        return semitones >= 1 && semitones <= 12;
+      });
   });
+}
+
+function tonalInterval({ from, to }: Pair): IntervalType {
+  return Interval.get(Interval.distance(from, to));
+}
+
+export function toInterval(_pair: Pair): string {
+  // TODO: return interval string
+  return '';
 }
 
 const fixedDoMapping: { [key: string]: string } = {

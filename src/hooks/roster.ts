@@ -7,6 +7,7 @@ import {
   getFrequency,
   getMidi,
   isAltered,
+  Pair,
   randomAlteration,
   randomNoteFromArray,
 } from '@/utils/music';
@@ -41,6 +42,11 @@ export function randomNoteFromRoster(roster?: Roster | null, previous?: string):
   }
   const alteration = previous && isAltered(previous) ? getAlteration(previous) : randomAlteration();
   return { alteration, spn: randomNoteFromArray(rosterAsArray(roster, alteration), previous) };
+}
+
+export function randomIntervalFromRoster(_roster?: Roster | null, _previous?: Pair): Pair {
+  // TODO: randomize
+  return { from: 'E2', to: 'F#2' };
 }
 
 function rosterAsArray(roster: Roster, alteration: Alteration): string[] {
