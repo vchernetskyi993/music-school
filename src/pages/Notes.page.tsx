@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
-import { Container, Divider, Group, Stack, Tabs, Title } from '@mantine/core';
-import { CapturedNote } from '@/components/CapturedNote';
-import { Counter } from '@/components/Counter';
-import { ExpectedSound } from '@/components/ExpectedSound';
-import { ExpectedStaff } from '@/components/ExpectedStaff';
+import { Container, Tabs } from '@mantine/core';
+import { ExpectedNote } from '@/components/expectations/ExpectedNote';
+import { ExpectedSound } from '@/components/expectations/ExpectedSound';
+import { ExpectedStaff } from '@/components/expectations/ExpectedStaff';
 import { pages } from '@/components/NavBar';
-import { Settings } from '@/components/Settings';
+import { Task } from '@/components/Task';
 import { useCounter } from '@/hooks/counter';
 import { randomNoteFromRoster, useRoster } from '@/hooks/roster';
-import { useSettings } from '@/hooks/settings';
-import { toFixedDo } from '@/utils/music';
 
 const tabs = {
   text: 'text',
@@ -26,7 +23,6 @@ export function Notes() {
   const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
   const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
-  const settings = useSettings();
 
   const refresh = () => {
     pause(false);
@@ -54,20 +50,12 @@ export function Notes() {
           <Tabs.Tab value={tabs.sound}>Sound</Tabs.Tab>
           <Tabs.Tab value={tabs.staff}>Staff</Tabs.Tab>
         </Tabs.List>
-        <Stack gap="md" m="sm">
-          <Settings notation={tab === 'text'} />
-          <Group justify="center">
-            <Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />
-          </Group>
-          <Divider size="md" />
-          <CapturedNote
-            pause={paused}
-            setNote={setActual}
-            expectedNote={expected.spn}
-            alteration={expected.alteration}
-          />
-          {settings.counter && <Counter counter={counter} />}
-        </Stack>
+        <Task
+          expectedNote={expected.spn}
+          notation={tab === 'text'}
+          setActual={setActual}
+          expectation={<Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />}
+        />
       </Tabs>
     </Container>
   );
@@ -84,10 +72,9 @@ function Expected({
   paused: boolean;
   pause: (pause: boolean) => void;
 }) {
-  const settings = useSettings();
   switch (tab) {
     case tabs.text:
-      return <ExpectedNote note={settings.notation === 'SPN' ? note : toFixedDo(note)} />;
+      return <ExpectedNote note={note} />;
     case tabs.sound:
       return <ExpectedSound note={note} paused={paused} pause={pause} />;
     case tabs.staff:
@@ -95,12 +82,4 @@ function Expected({
     default:
       throw Error(`Unsupported tab ${tab}`);
   }
-}
-
-function ExpectedNote({ note }: { note: string }) {
-  return (
-    <Title c="grape" ta="center" order={3}>
-      {note}
-    </Title>
-  );
 }
