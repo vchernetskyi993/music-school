@@ -34,6 +34,11 @@ export function Intro() {
         </ListItem>
         <ListItem>
           <Link to={pages.intervals.to}>{pages.intervals.label}</Link> - play a pair of notes.
+          Intervals are written using{' '}
+          <a href="https://en.wikipedia.org/wiki/Interval_(music)#Main_intervals">
+            conventional notation
+          </a>
+          .
         </ListItem>
       </List>
       <Title order={2}>Study Modes</Title>

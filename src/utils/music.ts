@@ -71,9 +71,9 @@ function tonalInterval({ from, to }: Pair): IntervalType {
   return Interval.get(Interval.distance(from, to));
 }
 
-export function toInterval(_pair: Pair): string {
-  // TODO: return interval string
-  return '';
+export function toInterval(pair: Pair): string {
+  const interval = tonalInterval(pair);
+  return `${interval.q}${interval.num}`;
 }
 
 const fixedDoMapping: { [key: string]: string } = {
