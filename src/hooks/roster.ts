@@ -31,7 +31,7 @@ export function parseRosterInput(input: string): Roster | string {
     return validateNote(from) || validateNote(to) || validateRange(from, to) || { from, to };
   }
   const notes = input.split(',');
-  return validateAlteration(input) || notes.map(validateNote).find((e) => !!e) || notes;
+  return validateArray(notes) || notes;
 }
 
 export type Note = { alteration: Alteration; spn: string };
@@ -94,15 +94,20 @@ function validateNote(note: string): string {
 }
 
 function validateRange(from: string, to: string): string {
-  if (getFrequency(from)! > getFrequency(to)!) {
-    return 'From should be smaller than to!';
+  if (getFrequency(from)! >= getFrequency(to)!) {
+    return 'From should be lower than to!';
   }
   return '';
 }
 
-function validateAlteration(input: string): string {
-  if (input.includes('#') && input.includes('b')) {
-    return 'Either flats or sharps are allowed!';
+function validateArray(notes: string[]): string {
+  const parseError = notes.map(validateNote).find((e) => !!e);
+  if (parseError) {
+    return parseError;
+  }
+  const frequencies = new Set(notes.map(getFrequency));
+  if (frequencies.size < 2) {
+    return 'At least 2 notes are required!';
   }
   return '';
 }

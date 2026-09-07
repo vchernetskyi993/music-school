@@ -1,14 +1,22 @@
 import { expect, test } from 'vitest';
 import { parseRosterInput } from './roster';
 
-test('rejects notes above the supported playback range', () => {
-  expect(parseRosterInput('E12')).toBe("Unsupported note 'E12'");
-});
-
 test('rejects ranges above the supported playback range', () => {
   expect(parseRosterInput('E2-E12')).toBe("Unsupported note 'E12'");
 });
 
 test('allows notes within the supported playback range', () => {
   expect(parseRosterInput('A0,C4,C8')).toEqual(['A0', 'C4', 'C8']);
+});
+
+test.each([['F2-E2'], ['E2-E2']])('requires range to grow from the left note', (range) => {
+  expect(parseRosterInput(range)).toBe('From should be lower than to!');
+});
+
+test('rejects single note', () => {
+  expect(parseRosterInput('E2')).toBe('At least 2 notes are required!');
+});
+
+test('rejects duplicate notes', () => {
+  expect(parseRosterInput('E2,Fb2')).toBe('At least 2 notes are required!');
 });
