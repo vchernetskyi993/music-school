@@ -5,16 +5,16 @@ import { useSettings } from '@/hooks/settings';
 import { getAlteration } from '@/utils/music';
 import { CapturedNote } from './CapturedNote';
 import { Counter } from './Counter';
-import { Settings } from './Settings';
+import { Settings, SettingsConf } from './Settings';
 
 export function Task({
   expectedNote,
-  notation,
+  settingsConf,
   setActual,
   expectation,
 }: {
   expectedNote: string;
-  notation: boolean;
+  settingsConf: SettingsConf;
   setActual: (note: string) => void;
   expectation: ReactNode;
 }) {
@@ -23,7 +23,7 @@ export function Task({
 
   return (
     <Stack gap="md" m="sm">
-      <Settings notation={notation} />
+      <Settings {...settingsConf} />
       <Group justify="center">{expectation}</Group>
       <Divider size="md" />
       <CapturedNote

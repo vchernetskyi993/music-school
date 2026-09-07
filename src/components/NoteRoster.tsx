@@ -5,10 +5,9 @@ const arrowSize = 10;
 const usage =
   "Supports either range (e.g., 'C3-E3') or comma-separated list of notes (e.g., 'C3,D3,E3')";
 
-export function NoteRoster() {
+export function NoteRoster({ intervals }: { intervals?: boolean }) {
   const [input, setInput] = useRosterInput();
-  const parsed = parseRosterInput(input);
-  // TODO: for intervals validate that valid interval can be produced
+  const parsed = parseRosterInput(input, { intervals });
   const error = typeof parsed === 'string' ? parsed : '';
 
   return (

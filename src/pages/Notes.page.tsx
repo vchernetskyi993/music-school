@@ -52,7 +52,7 @@ export function Notes() {
         </Tabs.List>
         <Task
           expectedNote={expected.spn}
-          notation={tab === 'text'}
+          settingsConf={{ notation: tab === 'text' }}
           setActual={setActual}
           expectation={<Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />}
         />

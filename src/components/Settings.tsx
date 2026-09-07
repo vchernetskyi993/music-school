@@ -3,7 +3,9 @@ import { Button, Checkbox, Group, Popover, Select, Stack } from '@mantine/core';
 import { Notation, useMutableSettings } from '@/hooks/settings';
 import { NoteRoster } from './NoteRoster';
 
-export function Settings({ notation }: { notation: boolean }) {
+export type SettingsConf = { notation: boolean; intervals?: boolean };
+
+export function Settings({ notation, intervals }: SettingsConf) {
   const [settings, setSettings] = useMutableSettings();
   return (
     <Group justify="center">
@@ -15,7 +17,7 @@ export function Settings({ notation }: { notation: boolean }) {
         </Popover.Target>
         <Popover.Dropdown>
           <Stack>
-            <NoteRoster />
+            <NoteRoster intervals={intervals} />
             <Checkbox
               checked={settings.hint}
               onChange={(e) => setSettings({ ...settings, hint: e.currentTarget.checked })}

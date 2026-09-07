@@ -31,7 +31,7 @@ export function Intervals() {
   return (
     <Task
       expectedNote={state === State.From ? notes.from : notes.to}
-      notation
+      settingsConf={{ notation: true, intervals: true }}
       setActual={setActual}
       expectation={
         state === State.From ? (

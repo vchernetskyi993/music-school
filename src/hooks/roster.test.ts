@@ -20,3 +20,9 @@ test('rejects single note', () => {
 test('rejects duplicate notes', () => {
   expect(parseRosterInput('E2,Fb2')).toBe('At least 2 notes are required!');
 });
+
+test.each([['E2,F#2'], ['E2,F#2,G3'], ['E2-F2']])('rejects less than 2 intervals', (roster) => {
+  expect(parseRosterInput(roster, { intervals: true })).toBe(
+    'At least two valid intervals are required!'
+  );
+});

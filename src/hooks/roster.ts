@@ -3,6 +3,7 @@ import { useLocalStorage } from '@mantine/hooks';
 import {
   Alteration,
   arrayRosterFromRange,
+  enumerateIntervals,
   getAlteration,
   getFrequency,
   getMidi,
@@ -25,13 +26,15 @@ export function useRosterInput(): [string, (input: string) => void] {
   return [input, setInput];
 }
 
-export function parseRosterInput(input: string): Roster | string {
+type InputChecks = { intervals?: boolean };
+
+export function parseRosterInput(input: string, checks: InputChecks = {}): Roster | string {
   if (input.includes('-')) {
     const [from, to] = input.split('-');
-    return validateNote(from) || validateNote(to) || validateRange(from, to) || { from, to };
+    return validateRange(from, to, checks) || { from, to };
   }
   const notes = input.split(',');
-  return validateArray(notes) || notes;
+  return validateArray(notes, checks) || notes;
 }
 
 export type Note = { alteration: Alteration; spn: string };
@@ -41,7 +44,7 @@ export function randomNoteFromRoster(roster?: Roster | null, previous?: string):
     return { spn: '', alteration: Alteration.Sharp };
   }
   const alteration = previous && isAltered(previous) ? getAlteration(previous) : randomAlteration();
-  return { alteration, spn: randomNoteFromArray(rosterAsArray(roster, alteration), previous) };
+  return { alteration, spn: randomNoteFromArray(rosterAsArray(roster, { alteration }), previous) };
 }
 
 export function randomIntervalFromRoster(_roster?: Roster | null, _previous?: Pair): Pair {
@@ -49,10 +52,8 @@ export function randomIntervalFromRoster(_roster?: Roster | null, _previous?: Pa
   return { from: 'E2', to: 'F#2' };
 }
 
-function rosterAsArray(roster: Roster, alteration: Alteration): string[] {
-  return roster instanceof Array
-    ? roster
-    : arrayRosterFromRange(roster.from, roster.to, alteration);
+function rosterAsArray(roster: Roster, opts: { alteration?: Alteration } = {}): string[] {
+  return roster instanceof Array ? roster : arrayRosterFromRange(roster.from, roster.to, opts);
 }
 
 export function firstNoteFromRoster(roster?: Roster | null): string {
@@ -93,14 +94,24 @@ function validateNote(note: string): string {
   return '';
 }
 
-function validateRange(from: string, to: string): string {
+function validateRange(from: string, to: string, checks: InputChecks): string {
+  return (
+    validateNote(from) ||
+    validateNote(to) ||
+    validateFromLowerThanTo(from, to) ||
+    validateIntervals({ from, to }, checks) ||
+    ''
+  );
+}
+
+function validateFromLowerThanTo(from: string, to: string): string {
   if (getFrequency(from)! >= getFrequency(to)!) {
     return 'From should be lower than to!';
   }
   return '';
 }
 
-function validateArray(notes: string[]): string {
+function validateArray(notes: string[], checks: InputChecks): string {
   const parseError = notes.map(validateNote).find((e) => !!e);
   if (parseError) {
     return parseError;
@@ -109,5 +120,15 @@ function validateArray(notes: string[]): string {
   if (frequencies.size < 2) {
     return 'At least 2 notes are required!';
   }
-  return '';
+  return validateIntervals(notes, checks) || '';
+}
+
+function validateIntervals(roster: Roster, checks: InputChecks) {
+  if (!checks.intervals) {
+    return '';
+  }
+  const intervals = enumerateIntervals(rosterAsArray(roster));
+  if (intervals.length < 2) {
+    return 'At least two valid intervals are required!';
+  }
 }

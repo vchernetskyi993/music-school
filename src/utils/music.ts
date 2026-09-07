@@ -49,9 +49,20 @@ export function randomNoteFromArray(notes: string[], previous?: string): string 
   return note;
 }
 
-export function arrayRosterFromRange(from: string, to: string, alteration: Alteration): string[] {
-  const opts = alteration ? { sharps: true } : {};
-  return Range.chromatic([from, to], opts);
+export function arrayRosterFromRange(
+  from: string,
+  to: string,
+  opts: { alteration?: Alteration } = {}
+): string[] {
+  const alteration =
+    opts.alteration ??
+    (isAltered(from)
+      ? getAlteration(from)
+      : isAltered(to)
+        ? getAlteration(to)
+        : randomAlteration());
+  const tonalOpts = alteration === Alteration.Sharp ? { sharps: true } : {};
+  return Range.chromatic([from, to], tonalOpts);
 }
 
 export type Pair = { from: string; to: string };
