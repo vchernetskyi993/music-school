@@ -1,45 +1,33 @@
 import { useEffect, useState } from 'react';
-import { ExpectedNote } from '@/components/expectations/ExpectedNote';
-import { ExpectedText } from '@/components/expectations/ExpectedText';
+import { ExpectedInterval } from '@/components/expectations/ExpectedInterval';
 import { Task } from '@/components/Task';
 import { useCounter } from '@/hooks/counter';
 import { randomIntervalFromRoster, useRoster } from '@/hooks/roster';
-import { toInterval } from '@/utils/music';
-
-enum State {
-  From = 0,
-  To,
-}
+import { IntervalState } from '@/utils/music';
 
 export function Intervals() {
   const roster = useRoster();
   const [notes, setNotes] = useState(() => randomIntervalFromRoster(roster));
-  const [state, setState] = useState(() => State.From);
+  const [state, setState] = useState(() => IntervalState.From);
   const [actual, setActual] = useState('');
   const counter = useCounter();
 
   useEffect(() => {
-    if (state === State.From && notes.from === actual) {
-      setState(State.To);
+    if (state === IntervalState.From && notes.from === actual) {
+      setState(IntervalState.To);
     }
-    if (state === State.To && notes.to === actual) {
+    if (state === IntervalState.To && notes.to === actual) {
       counter.increment();
-      setState(State.From);
+      setState(IntervalState.From);
       setNotes(randomIntervalFromRoster(roster, notes));
     }
   }, [actual, notes]);
   return (
     <Task
-      expectedNote={state === State.From ? notes.from : notes.to}
+      expectedNote={state === IntervalState.From ? notes.from : notes.to}
       settingsConf={{ notation: true, intervals: true }}
       setActual={setActual}
-      expectation={
-        state === State.From ? (
-          <ExpectedNote note={notes.from} />
-        ) : (
-          <ExpectedText text={toInterval(notes)} />
-        )
-      }
+      expectation={<ExpectedInterval notes={notes} state={state} />}
     />
   );
 }

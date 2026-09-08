@@ -56,6 +56,10 @@ export function arrayRosterFromRange(
 }
 
 export type Pair = { from: string; to: string };
+export enum IntervalState {
+  From = 0,
+  To,
+}
 
 export function enumerateIntervals(notes: string[]): Pair[] {
   return notes.flatMap((from) => {
