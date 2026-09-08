@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
+import { randomInt } from '@/utils/math';
 import {
   Alteration,
   arrayRosterFromRange,
@@ -8,9 +9,9 @@ import {
   getFrequency,
   getMidi,
   isAltered,
+  isSameNote,
   Pair,
   randomAlteration,
-  randomNoteFromArray,
 } from '@/utils/music';
 
 export type Roster = string[] | Range;
@@ -44,12 +45,39 @@ export function randomNoteFromRoster(roster?: Roster | null, previous?: string):
     return { spn: '', alteration: Alteration.Sharp };
   }
   const alteration = previous && isAltered(previous) ? getAlteration(previous) : randomAlteration();
-  return { alteration, spn: randomNoteFromArray(rosterAsArray(roster, { alteration }), previous) };
+  const notes = rosterAsArray(roster, { alteration });
+  return { alteration, spn: randomNote(notes, previous) };
 }
 
-export function randomIntervalFromRoster(_roster?: Roster | null, _previous?: Pair): Pair {
-  // TODO: randomize
-  return { from: 'E2', to: 'F#2' };
+function randomNote(notes: string[], previous?: string): string {
+  const note = notes[randomInt(0, notes.length - 1)];
+  if (previous && isSameNote(note, previous)) {
+    return randomNote(notes, previous);
+  }
+  return note;
+}
+
+export function randomIntervalFromRoster(roster?: Roster | null, previous?: Pair): Pair {
+  if (!roster) {
+    return { from: '', to: '' };
+  }
+  const alteration =
+    previous && isAltered(previous.from) ? getAlteration(previous.from) : randomAlteration();
+  const notes = rosterAsArray(roster, { alteration });
+  const intervals = enumerateIntervals(notes);
+  return randomInterval(intervals, previous);
+}
+
+function randomInterval(intervals: Pair[], previous?: Pair): Pair {
+  const interval = intervals[randomInt(0, intervals.length - 1)];
+  if (
+    previous &&
+    isSameNote(interval.from, previous.from) &&
+    isSameNote(interval.to, previous.to)
+  ) {
+    return randomInterval(intervals, previous);
+  }
+  return interval;
 }
 
 function rosterAsArray(roster: Roster, opts: { alteration?: Alteration } = {}): string[] {

@@ -1,5 +1,4 @@
 import { Interval, IntervalType, Range, Note as TonalNote } from 'tonal';
-import { randomInt } from './math';
 
 export enum Alteration {
   Flat = 0,
@@ -38,15 +37,6 @@ export function isAltered(note: string): boolean {
 
 export function randomAlteration(): Alteration {
   return Math.round(Math.random());
-}
-
-export function randomNoteFromArray(notes: string[], previous?: string): string {
-  const note = notes[randomInt(0, notes.length - 1)];
-  if (previous && TonalNote.get(note).freq === TonalNote.get(previous).freq) {
-    return randomNoteFromArray(notes, previous);
-  }
-
-  return note;
 }
 
 export function arrayRosterFromRange(
@@ -117,4 +107,8 @@ export function getMidi(note: string): number | null {
 
 export function getFrequency(note: string): number | null {
   return TonalNote.get(note).freq;
+}
+
+export function isSameNote(noteA: string, noteB: string): boolean {
+  return getFrequency(noteA) === getFrequency(noteB);
 }
