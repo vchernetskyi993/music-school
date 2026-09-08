@@ -21,24 +21,47 @@ export function Intro() {
         theoretical knowledge directly to your fingertips.
       </Text>
       <Title order={2}>Available Tools</Title>
+      <Title order={3}>
+        <Link to={pages.visualize.to}>{pages.visualize.label}</Link>
+      </Title>
+      <Text>
+        Displays played note on the screen. Useful to verify that application is operational and, if
+        needed, to tune your instrument.
+      </Text>
+      <Title order={3}>
+        <Link to={generatePath(pages.notes.to, pages.notes.params)}>{pages.notes.label}</Link>
+      </Title>
+      <Text>
+        Play a note displayed on the screen. Useful to learn positions of single notes on the
+        instrument.
+      </Text>
+      <Title order={3}>
+        <Link to={pages.intervals.to}>{pages.intervals.label}</Link>
+      </Title>
+      <Text>
+        Play a pair of notes. Task is formatted as{' '}
+        <b>
+          <code>`[Note] +[Interval] ([Index])`</code>
+        </b>{' '}
+        (e.g.,{' '}
+        <b>
+          <code>`E2 +P8 (2)`</code>
+        </b>{' '}
+        meaning the ending note of the perfect octave starting from E2).
+      </Text>
       <List withPadding>
         <ListItem>
-          <Link to={pages.visualize.to}>{pages.visualize.label}</Link> - displays played note on the
-          screen. Useful to verify that application is operational and, if needed, to tune your
-          instrument.
+          <b>[Note]</b> - single note notation. Adheres to <b>Text</b> study mode rules below.
         </ListItem>
         <ListItem>
-          <Link to={generatePath(pages.notes.to, pages.notes.params)}>{pages.notes.label}</Link> -
-          play a note displayed on the screen. Useful to learn positions of single notes on the
-          instrument.
-        </ListItem>
-        <ListItem>
-          <Link to={pages.intervals.to}>{pages.intervals.label}</Link> - play a pair of notes.
-          Intervals are written using{' '}
+          <b>[Interval]</b> - interval from the <b>[Note]</b> in the{' '}
           <a href="https://en.wikipedia.org/wiki/Interval_(music)#Main_intervals">
             conventional notation
           </a>
           .
+        </ListItem>
+        <ListItem>
+          <b>[Index]</b> - either 1 or 2 depending if you need to input starting or ending note.
         </ListItem>
       </List>
       <Title order={2}>Study Modes</Title>
