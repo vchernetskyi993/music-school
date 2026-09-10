@@ -38,15 +38,13 @@ export function parseRosterInput(input: string, checks: InputChecks = {}): Roste
   return validateArray(notes, checks) || notes;
 }
 
-export type Note = { alteration: Alteration; spn: string };
-
-export function randomNoteFromRoster(roster?: Roster | null, previous?: string): Note {
+export function randomNoteFromRoster(roster?: Roster | null, previous?: string): string {
   if (!roster) {
-    return { spn: '', alteration: Alteration.Sharp };
+    return '';
   }
   const alteration = previous && isAltered(previous) ? getAlteration(previous) : randomAlteration();
   const notes = rosterAsArray(roster, { alteration });
-  return { alteration, spn: randomNote(notes, previous) };
+  return randomNote(notes, previous);
 }
 
 function randomNote(notes: string[], previous?: string): string {
@@ -62,7 +60,7 @@ export function randomIntervalFromRoster(roster?: Roster | null, previous?: Pair
     return { from: '', to: '' };
   }
   const alteration =
-    previous && isAltered(previous.from) ? getAlteration(previous.from) : randomAlteration();
+    previous && isAltered(previous.to) ? getAlteration(previous.to) : randomAlteration();
   const notes = rosterAsArray(roster, { alteration });
   const intervals = enumerateIntervals(notes);
   return randomInterval(intervals, previous);

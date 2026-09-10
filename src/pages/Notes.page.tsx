@@ -21,17 +21,18 @@ export function Notes() {
   const counter = useCounter();
   const roster = useRoster();
   const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
+  const [previousNote, setPreviousNote] = useState<string>();
   const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
 
   const refresh = () => {
     pause(false);
-    setExpected(randomNoteFromRoster(roster, expected.spn));
+    setPreviousNote(expected);
+    setExpected(randomNoteFromRoster(roster, expected));
   };
 
-  useEffect(refresh, [roster]);
   useEffect(() => {
-    if (actual === expected.spn) {
+    if (actual === expected) {
       counter.increment();
       refresh();
     }
@@ -51,10 +52,11 @@ export function Notes() {
           <Tabs.Tab value={tabs.staff}>Staff</Tabs.Tab>
         </Tabs.List>
         <Task
-          expectedNote={expected.spn}
+          expectedNote={expected}
+          previousNote={previousNote}
           settingsConf={{ notation: tab === 'text' }}
           setActual={setActual}
-          expectation={<Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />}
+          expectation={<Expected tab={tab!} note={expected} paused={paused} pause={pause} />}
           counter={counter}
         />
       </Tabs>

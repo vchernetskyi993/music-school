@@ -7,27 +7,31 @@ import { IntervalState } from '@/utils/music';
 
 export function Intervals() {
   const roster = useRoster();
-  const [notes, setNotes] = useState(() => randomIntervalFromRoster(roster));
+  const [interval, setInterval] = useState(() => randomIntervalFromRoster(roster));
   const [state, setState] = useState(() => IntervalState.From);
+  const [previousNote, setPreviousNote] = useState<string>();
   const [actual, setActual] = useState('');
   const counter = useCounter();
 
   useEffect(() => {
-    if (state === IntervalState.From && notes.from === actual) {
+    if (state === IntervalState.From && interval.from === actual) {
       setState(IntervalState.To);
+      setPreviousNote(interval.from);
     }
-    if (state === IntervalState.To && notes.to === actual) {
+    if (state === IntervalState.To && interval.to === actual) {
       counter.increment();
       setState(IntervalState.From);
-      setNotes(randomIntervalFromRoster(roster, notes));
+      setPreviousNote(interval.to);
+      setInterval(randomIntervalFromRoster(roster, interval));
     }
-  }, [actual, notes]);
+  }, [actual, interval]);
   return (
     <Task
-      expectedNote={state === IntervalState.From ? notes.from : notes.to}
+      expectedNote={state === IntervalState.From ? interval.from : interval.to}
+      previousNote={previousNote}
       settingsConf={{ notation: true, intervals: true }}
       setActual={setActual}
-      expectation={<ExpectedInterval notes={notes} state={state} />}
+      expectation={<ExpectedInterval notes={interval} state={state} />}
       counter={counter}
     />
   );
