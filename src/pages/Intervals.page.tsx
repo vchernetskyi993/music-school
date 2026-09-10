@@ -28,6 +28,7 @@ export function Intervals() {
       settingsConf={{ notation: true, intervals: true }}
       setActual={setActual}
       expectation={<ExpectedInterval notes={notes} state={state} />}
+      counter={counter}
     />
   );
 }

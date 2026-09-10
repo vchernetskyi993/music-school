@@ -55,6 +55,7 @@ export function Notes() {
           settingsConf={{ notation: tab === 'text' }}
           setActual={setActual}
           expectation={<Expected tab={tab!} note={expected.spn} paused={paused} pause={pause} />}
+          counter={counter}
         />
       </Tabs>
     </Container>

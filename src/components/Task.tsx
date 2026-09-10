@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Divider, Group, Stack } from '@mantine/core';
-import { useCounter } from '@/hooks/counter';
+import { ICounter } from '@/hooks/counter';
 import { useSettings } from '@/hooks/settings';
 import { getAlteration } from '@/utils/music';
 import { CapturedNote } from './CapturedNote';
@@ -12,14 +12,15 @@ export function Task({
   settingsConf,
   setActual,
   expectation,
+  counter,
 }: {
   expectedNote: string;
   settingsConf: SettingsConf;
   setActual: (note: string) => void;
   expectation: ReactNode;
+  counter: ICounter;
 }) {
   const settings = useSettings();
-  const counter = useCounter();
 
   return (
     <Stack gap="md" m="sm">
