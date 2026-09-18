@@ -7,13 +7,13 @@ import { firstNoteFromRoster, useRoster } from '@/hooks/roster';
 import { useSettings } from '@/hooks/settings';
 import { trimDecimal } from '@/utils/math';
 import {
+  Alteration,
   frequencyDiff,
   getAlteration,
   getFrequency,
   isAltered,
   nextNote,
   noteFromFrequency,
-  randomAlteration,
   toFixedDo,
 } from '@/utils/music';
 
@@ -40,7 +40,7 @@ export function CapturedNote({
       ? getAlteration(expectedNote)
       : previousNote && isAltered(previousNote)
         ? getAlteration(previousNote)
-        : randomAlteration();
+        : Alteration.Sharp;
   const note = sound ? noteFromFrequency(sound, alteration) : '';
   const expectedFreq = expectedNote && getFrequency(expectedNote);
   const diff = expectedFreq && sound && trimDecimal(sound - expectedFreq);
