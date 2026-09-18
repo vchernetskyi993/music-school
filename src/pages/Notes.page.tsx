@@ -24,6 +24,7 @@ export function Notes() {
   const [previousNote, setPreviousNote] = useState<string>();
   const [paused, pause] = useState(false);
   const [actual, setActual] = useState('');
+  const [initial, setInitial] = useState(true);
 
   const refresh = () => {
     pause(false);
@@ -33,8 +34,9 @@ export function Notes() {
 
   useEffect(refresh, [roster]);
   useEffect(() => {
-    if (actual === expected) {
+    if (actual && actual === expected) {
       counter.increment();
+      setInitial(false);
       refresh();
     }
   }, [actual, expected]);
@@ -57,7 +59,9 @@ export function Notes() {
           previousNote={previousNote}
           settingsConf={{ notation: tab === 'text' }}
           setActual={setActual}
-          expectation={<Expected tab={tab!} note={expected} paused={paused} pause={pause} />}
+          expectation={
+            <Expected tab={tab!} note={expected} paused={paused} pause={pause} initial={initial} />
+          }
           counter={counter}
         />
       </Tabs>
@@ -70,17 +74,19 @@ function Expected({
   note,
   paused,
   pause,
+  initial,
 }: {
   tab: string;
   note: string;
   paused: boolean;
   pause: (pause: boolean) => void;
+  initial: boolean;
 }) {
   switch (tab) {
     case tabs.text:
       return <ExpectedNote note={note} />;
     case tabs.sound:
-      return <ExpectedSound note={note} paused={paused} pause={pause} />;
+      return <ExpectedSound note={note} paused={paused} pause={pause} initial={initial} />;
     case tabs.staff:
       return <ExpectedStaff note={note} />;
     default:
