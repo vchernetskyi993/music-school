@@ -31,6 +31,7 @@ export function Notes() {
     setExpected(randomNoteFromRoster(roster, expected));
   };
 
+  useEffect(refresh, [roster]);
   useEffect(() => {
     if (actual === expected) {
       counter.increment();

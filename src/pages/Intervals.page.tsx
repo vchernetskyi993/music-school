@@ -13,6 +13,13 @@ export function Intervals() {
   const [actual, setActual] = useState('');
   const counter = useCounter();
 
+  const refresh = () => {
+    setState(IntervalState.From);
+    setPreviousNote(state === IntervalState.From ? interval.from : interval.to);
+    setInterval(randomIntervalFromRoster(roster, interval));
+  };
+
+  useEffect(refresh, [roster]);
   useEffect(() => {
     if (state === IntervalState.From && interval.from === actual) {
       setState(IntervalState.To);
@@ -20,9 +27,7 @@ export function Intervals() {
     }
     if (state === IntervalState.To && interval.to === actual) {
       counter.increment();
-      setState(IntervalState.From);
-      setPreviousNote(interval.to);
-      setInterval(randomIntervalFromRoster(roster, interval));
+      refresh();
     }
   }, [actual, interval]);
   return (
