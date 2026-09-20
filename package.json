@@ -16,9 +16,7 @@
     "prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
     "vitest": "vitest run",
     "vitest:watch": "vitest",
-    "verify": "npm run prettier && npm run lint && npm run typecheck && npm run vitest",
-    "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build"
+    "verify": "npm run prettier && npm run lint && npm run typecheck && npm run vitest"
   },
   "dependencies": {
     "@mantine/core": "9.3.0",
@@ -38,8 +36,6 @@
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
-    "@storybook/react": "^8.6.12",
-    "@storybook/react-vite": "^8.6.12",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -61,8 +57,6 @@
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.5.3",
     "prop-types": "^15.8.1",
-    "storybook": "^8.6.12",
-    "storybook-dark-mode": "^4.0.2",
     "stylelint": "^16.20.0",
     "stylelint-config-standard-scss": "^15.0.1",
     "typescript": "^5.8.3",
