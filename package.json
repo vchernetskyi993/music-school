@@ -19,8 +19,8 @@
     "verify": "npm run prettier && npm run lint && npm run typecheck && npm test"
   },
   "dependencies": {
-    "@mantine/core": "9.3.0",
-    "@mantine/hooks": "9.3.0",
+    "@mantine/core": "^9.3.0",
+    "@mantine/hooks": "^9.3.0",
     "@tabler/icons-react": "^3.34.1",
     "howler": "^2.2.4",
     "pitchy": "^4.1.0",
