@@ -12,6 +12,7 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './vitest.setup.mjs',
+    isolate: false,
   },
   define: {
     __COMMIT_HASH__: JSON.stringify(commitHash),
