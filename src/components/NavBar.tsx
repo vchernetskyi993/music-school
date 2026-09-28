@@ -25,6 +25,7 @@ export function NavBar({ toggle }: { toggle: () => void }) {
     <AppShell.Navbar p="md">
       {links.map((link) => (
         <NavLink
+          key={link.label}
           href={generatePath(link.to, link.params)}
           label={link.label}
           variant="subtle"
