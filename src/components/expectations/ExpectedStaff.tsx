@@ -1,6 +1,7 @@
+import { Box } from '@mantine/core';
 import { useEffect, useId, useRef } from 'react';
 import { Clef, EasyScore, Factory, type Stave, type StaveNote } from 'vexflow';
-import { Box } from '@mantine/core';
+
 import { getMidi } from '@/utils/music';
 
 const staveWidth = 100;

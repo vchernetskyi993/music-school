@@ -1,7 +1,9 @@
-import { ReactNode } from 'react';
 import { Divider, Group, Stack } from '@mantine/core';
+import { ReactNode } from 'react';
+
 import { ICounter } from '@/hooks/counter';
 import { useSettings } from '@/hooks/settings';
+
 import { CapturedNote } from './CapturedNote';
 import { Counter } from './Counter';
 import { Settings, SettingsConf } from './Settings';

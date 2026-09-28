@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
+import { useEffect, useState } from 'react';
+
 import { randomInt } from '@/utils/math';
 import {
   Alteration,

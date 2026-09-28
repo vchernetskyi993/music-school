@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { enumerateIntervals, frequencyDiff, nextNote } from './music';
 
 test('get next note', () => {

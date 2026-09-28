@@ -1,7 +1,8 @@
+import { Loader, Stack, Text } from '@mantine/core';
 import { useEffect } from 'react';
 import { useWakeLock } from 'react-screen-wake-lock';
 import { identity } from 'rxjs';
-import { Loader, Stack, Text } from '@mantine/core';
+
 import { useSound } from '@/hooks/pitch';
 import { firstNoteFromRoster, useRoster } from '@/hooks/roster';
 import { useSettings } from '@/hooks/settings';

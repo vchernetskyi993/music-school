@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { map, takeWhile, timer } from 'rxjs';
 import { IAnalyserNode, IAudioContext } from 'standardized-audio-context';
+
 import { ContextType, Detector } from '@/App';
 import { trimDecimal } from '@/utils/math';
 

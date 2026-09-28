@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { formatDuration } from './time';
 
 test('formats durations under one minute', () => {

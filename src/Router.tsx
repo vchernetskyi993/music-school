@@ -1,4 +1,5 @@
 import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
+
 import App from './App';
 import { Intervals } from './pages/Intervals.page';
 import { Intro } from './pages/Intro.page';

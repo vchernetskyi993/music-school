@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
 import { Howl } from 'howler';
+import { useEffect, useMemo, useState } from 'react';
+
 import { getMidi } from '@/utils/music';
 
 interface Player {

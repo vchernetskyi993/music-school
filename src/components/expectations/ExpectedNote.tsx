@@ -1,5 +1,6 @@
 import { useSettings } from '@/hooks/settings';
 import { toFixedDo } from '@/utils/music';
+
 import { ExpectedText } from './ExpectedText';
 
 export function ExpectedNote({ note }: { note: string }) {

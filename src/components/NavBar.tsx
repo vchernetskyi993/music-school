@@ -1,5 +1,5 @@
+import { NavLink, AppShell } from '@mantine/core';
 import { generatePath, useMatch, useNavigate } from 'react-router-dom';
-import { AppShell, NavLink } from '@mantine/core';
 
 type ME = React.MouseEvent<HTMLAnchorElement, MouseEvent>;
 type Link = { to: string; label: string; params?: { [key: string]: string } };

@@ -1,16 +1,16 @@
 import '@mantine/core/styles.css';
-
-import { useEffect, useState } from 'react';
+import { Anchor, AppShell, Burger, Group, MantineProvider, Text, Title } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconBrandGithub } from '@tabler/icons-react';
 import { PitchDetector } from 'pitchy';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
   IAnalyserNode,
   IAudioContext,
   AudioContext as StandardizedAudioContext,
 } from 'standardized-audio-context';
-import { Anchor, AppShell, Burger, Group, MantineProvider, Text, Title } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+
 import { NavBar } from './components/NavBar';
 import { theme } from './theme';
 

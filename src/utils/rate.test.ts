@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { calculateCountPerMinute, formatCountPerMinute } from './rate';
 
 test('returns zero when no time has elapsed', () => {

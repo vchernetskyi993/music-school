@@ -1,5 +1,6 @@
 import { useSettings } from '@/hooks/settings';
 import { IntervalState, Pair, toFixedDo, toInterval } from '@/utils/music';
+
 import { ExpectedText } from './ExpectedText';
 
 export function ExpectedInterval({ notes, state }: { notes: Pair; state: IntervalState }) {

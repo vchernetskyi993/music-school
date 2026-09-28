@@ -1,5 +1,6 @@
-import { generatePath, Link } from 'react-router-dom';
 import { List, ListItem, Stack, Text, Title } from '@mantine/core';
+import { generatePath, Link } from 'react-router-dom';
+
 import { pages } from '@/components/NavBar';
 
 export function Intro() {

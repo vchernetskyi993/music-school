@@ -1,6 +1,8 @@
-import { IconSettings } from '@tabler/icons-react';
 import { Button, Checkbox, Group, Popover, Select, Stack } from '@mantine/core';
+import { IconSettings } from '@tabler/icons-react';
+
 import { Notation, useMutableSettings } from '@/hooks/settings';
+
 import { NoteRoster } from './NoteRoster';
 
 export type SettingsConf = { notation: boolean; intervals?: boolean };

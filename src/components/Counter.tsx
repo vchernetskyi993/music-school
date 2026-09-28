@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { IconPlayerPause, IconPlayerPlay, IconRestore } from '@tabler/icons-react';
 import { ActionIcon, Group, Paper, Stack, Text, Title, Tooltip } from '@mantine/core';
+import { IconPlayerPause, IconPlayerPlay, IconRestore } from '@tabler/icons-react';
+import React, { useEffect, useState } from 'react';
+
 import { ICounter } from '@/hooks/counter';
 import { formatCountPerMinute } from '@/utils/rate';
 import { formatDuration } from '@/utils/time';

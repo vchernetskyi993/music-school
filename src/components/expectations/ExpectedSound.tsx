@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
-import { IconPlayerPlay } from '@tabler/icons-react';
 import { ActionIcon, Loader } from '@mantine/core';
+import { IconPlayerPlay } from '@tabler/icons-react';
+import { useEffect } from 'react';
+
 import { usePlayer } from '@/hooks/player';
 
 export function ExpectedSound({

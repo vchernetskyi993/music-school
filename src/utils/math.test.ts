@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+
 import { median } from './math';
 
 test('calculate median for even array', () => {

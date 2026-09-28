@@ -1,6 +1,7 @@
+import { Container, Tabs } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
-import { Container, Tabs } from '@mantine/core';
+
 import { ExpectedNote } from '@/components/expectations/ExpectedNote';
 import { ExpectedSound } from '@/components/expectations/ExpectedSound';
 import { ExpectedStaff } from '@/components/expectations/ExpectedStaff';
