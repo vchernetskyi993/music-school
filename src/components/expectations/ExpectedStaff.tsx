@@ -20,7 +20,7 @@ type VerticalBounds = {
   getY: () => number;
 };
 
-export function ExpectedStaff({ note }: { note: string }) {
+export default function ExpectedStaff({ note }: { note: string }) {
   const containerId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
 

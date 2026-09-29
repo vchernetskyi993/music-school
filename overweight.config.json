@@ -1,0 +1,9 @@
+{
+  "files": [
+    {
+      "path": "./dist/**/*",
+      "maxSize": "500 kB",
+      "compression": "none"
+    }
+  ]
+}

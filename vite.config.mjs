@@ -20,4 +20,34 @@ export default defineConfig({
   define: {
     __COMMIT_HASH__: JSON.stringify(commitHash),
   },
+  build: {
+    rollupOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              test: /react/,
+              name: 'react',
+            },
+            {
+              test: /mantine/,
+              name: 'mantine',
+            },
+            {
+              test: /vexflow1.*bravura/,
+              name: 'vexflow-bravura',
+            },
+            {
+              test: /vexflow.*petaluma/,
+              name: 'vexflow-petaluma',
+            },
+            {
+              test: /vexflow.*fonts/,
+              name: 'vexflow-fonts',
+            },
+          ],
+        },
+      },
+    },
+  },
 });

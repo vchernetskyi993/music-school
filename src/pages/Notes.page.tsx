@@ -1,14 +1,15 @@
 import { Container, Tabs } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { ExpectedNote } from '@/components/expectations/ExpectedNote';
 import { ExpectedSound } from '@/components/expectations/ExpectedSound';
-import { ExpectedStaff } from '@/components/expectations/ExpectedStaff';
 import { pages } from '@/components/NavBar';
 import { Task } from '@/components/Task';
 import { useCounter } from '@/hooks/counter';
 import { randomNoteFromRoster, useRoster } from '@/hooks/roster';
+
+const ExpectedStaff = lazy(() => import('@/components/expectations/ExpectedStaff'));
 
 const tabs = {
   text: 'text',
