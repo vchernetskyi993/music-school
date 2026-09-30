@@ -1,4 +1,4 @@
-import { parseSemitoneInput, useSemitoneInput } from '@/hooks/roster/semitones';
+import { parseSemitonesInput, useSemitonesInput } from '@/hooks/roster/semitones';
 
 import { Roster } from './Roster';
 
@@ -8,8 +8,8 @@ const usage =
 export function SemitoneRoster() {
   return (
     <Roster
-      useInput={useSemitoneInput}
-      parseInput={parseSemitoneInput}
+      useInput={useSemitonesInput}
+      parseInput={parseSemitonesInput}
       label="Semitones"
       usage={usage}
     />

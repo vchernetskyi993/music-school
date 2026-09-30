@@ -1,4 +1,4 @@
-import { parseRosterInput, useRosterInput } from '@/hooks/roster/notes';
+import { parseNotesInput, useNoteInput } from '@/hooks/roster/notes';
 
 import { Roster } from './Roster';
 
@@ -8,8 +8,8 @@ const usage =
 export function NoteRoster({ semitones }: { semitones?: number[] }) {
   return (
     <Roster
-      useInput={useRosterInput}
-      parseInput={(input) => parseRosterInput(input, { semitones })}
+      useInput={useNoteInput}
+      parseInput={(input) => parseNotesInput(input, { semitones })}
       label="Notes"
       usage={usage}
     />
