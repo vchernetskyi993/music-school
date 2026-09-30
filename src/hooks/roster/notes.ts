@@ -11,26 +11,25 @@ import {
   getMidi,
   isAltered,
   isSameNote,
-  Pair,
   randomAlteration,
 } from '@/utils/music';
+import { Roster } from '.';
 
-export type Roster = string[] | Range;
-export type Range = { from: string; to: string };
+type NoteRoster = Roster<string>;
 
-export function useRoster(): Roster | null {
+export function useNoteRoster(): NoteRoster | null {
   const [roster] = useRosterInternal();
   return roster;
 }
 
-export function useRosterInput(): [string, (input: string) => void] {
+export function useNotesInput(): [string, (input: string) => void] {
   const [_, input, setInput] = useRosterInternal();
   return [input, setInput];
 }
 
-type InputChecks = { intervals?: boolean };
+type InputChecks = { semitones?: number[] };
 
-export function parseRosterInput(input: string, checks: InputChecks = {}): Roster | string {
+export function parseNotesInput(input: string, checks: InputChecks = {}): NoteRoster | string {
   if (input.includes('-')) {
     const [from, to] = input.split('-');
     return validateRange(from, to, checks) || { from, to };
@@ -39,7 +38,7 @@ export function parseRosterInput(input: string, checks: InputChecks = {}): Roste
   return validateArray(notes, checks) || notes;
 }
 
-export function randomNoteFromRoster(roster?: Roster | null, previous?: string): string {
+export function randomNoteFromRoster(roster?: NoteRoster | null, previous?: string): string {
   if (!roster) {
     return '';
   }
@@ -56,58 +55,35 @@ function randomNote(notes: string[], previous?: string): string {
   return note;
 }
 
-export function randomIntervalFromRoster(roster?: Roster | null, previous?: Pair): Pair {
-  if (!roster) {
-    return { from: '', to: '' };
-  }
-  const alteration =
-    previous && isAltered(previous.to) ? getAlteration(previous.to) : randomAlteration();
-  const notes = rosterAsArray(roster, { alteration });
-  const intervals = enumerateIntervals(notes);
-  return randomInterval(intervals, previous);
-}
-
-function randomInterval(intervals: Pair[], previous?: Pair): Pair {
-  const interval = intervals[randomInt(0, intervals.length - 1)];
-  if (
-    previous &&
-    isSameNote(interval.from, previous.from) &&
-    isSameNote(interval.to, previous.to)
-  ) {
-    return randomInterval(intervals, previous);
-  }
-  return interval;
-}
-
-function rosterAsArray(roster: Roster, opts: { alteration?: Alteration } = {}): string[] {
+function rosterAsArray(roster: NoteRoster, opts: { alteration?: Alteration } = {}): string[] {
   return roster instanceof Array ? roster : arrayRosterFromRange(roster.from, roster.to, opts);
 }
 
-export function firstNoteFromRoster(roster?: Roster | null): string {
+export function firstNoteFromRoster(roster?: NoteRoster | null): string {
   if (!roster) {
     return '';
   }
   return roster instanceof Array ? roster[0] : roster.from;
 }
 
-const defaultRoster: Roster = { from: 'E2', to: 'E5' };
+const defaultRoster: NoteRoster = { from: 'E2', to: 'E5' };
 
-function useRosterInternal(): [Roster | null, string, (input: string) => void] {
+function useRosterInternal(): [NoteRoster | null, string, (input: string) => void] {
   const [input, setInput] = useLocalStorage({
     key: 'note-roster',
     defaultValue: rosterToString(defaultRoster),
   });
-  const [roster, setRoster] = useState<Roster | null>(rosterFromInput(input));
+  const [roster, setRoster] = useState<NoteRoster | null>(rosterFromInput(input));
   useEffect(() => setRoster(rosterFromInput(input)), [input]);
   return [roster, input, setInput];
 }
 
-function rosterFromInput(input: string): Roster | null {
-  const parsed = parseRosterInput(input);
-  return typeof parsed === 'string' ? null : (parsed as Roster);
+function rosterFromInput(input: string): NoteRoster | null {
+  const parsed = parseNotesInput(input);
+  return typeof parsed === 'string' ? null : (parsed as NoteRoster);
 }
 
-function rosterToString(roster: Roster): string {
+function rosterToString(roster: NoteRoster): string {
   return roster instanceof Array ? roster.join(',') : `${roster.from}-${roster.to}`;
 }
 
@@ -150,11 +126,11 @@ function validateArray(notes: string[], checks: InputChecks): string {
   return validateIntervals(notes, checks) || '';
 }
 
-function validateIntervals(roster: Roster, checks: InputChecks) {
-  if (!checks.intervals) {
+function validateIntervals(roster: NoteRoster, checks: InputChecks) {
+  if (!checks.semitones) {
     return '';
   }
-  const intervals = enumerateIntervals(rosterAsArray(roster));
+  const intervals = enumerateIntervals(rosterAsArray(roster), checks.semitones);
   if (intervals.length < 2) {
     return 'At least two valid intervals are required!';
   }

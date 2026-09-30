@@ -1,14 +1,17 @@
 import { Button, Checkbox, Group, Popover, Select, Stack } from '@mantine/core';
 import { IconSettings } from '@tabler/icons-react';
 
+import { useSemitoneRoster } from '@/hooks/roster/semitones';
 import { Notation, useMutableSettings } from '@/hooks/settings';
 
-import { NoteRoster } from './NoteRoster';
+import { NoteRoster } from './roster/NoteRoster';
+import { SemitoneRoster } from './roster/SemitoneRoster';
 
 export type SettingsConf = { notation: boolean; intervals?: boolean };
 
 export function Settings({ notation, intervals }: SettingsConf) {
   const [settings, setSettings] = useMutableSettings();
+  const semitones = useSemitoneRoster();
   return (
     <Group justify="center">
       <Popover>
@@ -19,7 +22,8 @@ export function Settings({ notation, intervals }: SettingsConf) {
         </Popover.Target>
         <Popover.Dropdown>
           <Stack>
-            <NoteRoster intervals={intervals} />
+            <NoteRoster semitones={semitones} />
+            {intervals && <SemitoneRoster />}
             <Checkbox
               checked={settings.hint}
               onChange={(e) => setSettings({ ...settings, hint: e.currentTarget.checked })}

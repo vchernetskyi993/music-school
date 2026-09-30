@@ -4,9 +4,9 @@ import { parseRosterInput, useRosterInput } from '@/hooks/roster';
 
 const arrowSize = 10;
 const usage =
-  "Supports either range (e.g., 'C3-E3') or comma-separated list of notes (e.g., 'C3,D3,E3')";
+  "Supports either semitones range (e.g., '1-12') or comma-separated list of semitones (e.g., '3,4,6')";
 
-export function NoteRoster({ intervals }: { intervals?: boolean }) {
+export function IntervalRoster({ intervals }: { intervals?: boolean }) {
   const [input, setInput] = useRosterInput();
   const parsed = parseRosterInput(input, { intervals });
   const error = typeof parsed === 'string' ? parsed : '';
