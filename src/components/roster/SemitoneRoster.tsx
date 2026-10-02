@@ -3,7 +3,7 @@ import { parseSemitonesInput, useSemitonesInput } from '@/hooks/roster/semitones
 import { Roster } from './Roster';
 
 const usage =
-  "Supports either range (e.g., 'C3-E3') or comma-separated list of notes (e.g., 'C3,D3,E3')";
+  "Supports either range (e.g., '1-5') or comma-separated list of semitones (e.g., '3,5,7')";
 
 export function SemitoneRoster() {
   return (
