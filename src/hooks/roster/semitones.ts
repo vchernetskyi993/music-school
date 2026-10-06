@@ -70,15 +70,37 @@ function fromInput(roster: Roster<string>): Roster<number> | string {
   return roster instanceof Array ? fromArray(roster) : fromRange(roster);
 }
 
-/* TODO: validate semitones
- * is number
- * lower < upper
- * is >= 1
- */
-function fromRange(_range: Range<string>): Range<number> | string {
-  return '';
+function fromRange(range: Range<string>): Range<number> | string {
+  const from = parseSemitone(range.from);
+  if (typeof from === 'string') {
+    return from;
+  }
+  const to = parseSemitone(range.to);
+  if (typeof to === 'string') {
+    return to;
+  }
+  if (from >= to) {
+    return 'From should be lower than to!';
+  }
+  return { from, to };
 }
 
-function fromArray(_semitones: string[]): Range<number> | string {
-  return '';
+function parseSemitone(semitone: string): number | string {
+  const parsed = parseInt(semitone, 10);
+  if (isNaN(parsed)) {
+    return `Invalid semitone '${semitone}'`;
+  }
+  if (parsed < 1) {
+    return 'Only positive numbers are supported!';
+  }
+  return parsed;
+}
+
+function fromArray(semitones: string[]): number[] | string {
+  const parsed = semitones.map(parseSemitone);
+  const error = parsed.find(s => typeof s === "string");
+  if (error) {
+    return error;
+  }
+  return [...new Set(parsed.map(Number))];
 }

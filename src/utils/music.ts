@@ -65,7 +65,10 @@ export function enumerateIntervals(notes: string[], semitones: number[]): Pair[]
   return notes.flatMap((from) => {
     return notes
       .map((to) => ({ from, to }))
-      .filter((pair) => semitones.includes(tonalInterval(pair).semitones));
+      .filter((pair) => {
+        const ss = tonalInterval(pair).semitones;
+        return semitones.includes(ss);
+      });
   });
 }
 
