@@ -2,8 +2,6 @@ import { expect, test } from 'vitest';
 
 import { parseNotesInput } from './notes';
 
-// TODO: duplicate validations to semitones tests
-
 test('rejects ranges above the supported playback range', () => {
   expect(parseNotesInput('E2-E12')).toBe("Unsupported note 'E12'");
 });

@@ -9,11 +9,14 @@ export type Range<T> = { from: T; to: T };
 type FromInput<T> = (roster: Roster<string>) => Roster<T> | string;
 
 export function parseInput<T>(input: string, fromInput: FromInput<T>): Roster<T> | string {
+  if (input.includes(',')) {
+    return fromInput(input.split(','));
+  }
   if (input.includes('-')) {
     const [from, to] = input.split('-');
     return fromInput({ from, to });
   }
-  return fromInput(input.split(','));
+  return fromInput([input]);
 }
 
 export function useRoster<T>(

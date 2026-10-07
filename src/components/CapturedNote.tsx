@@ -4,7 +4,7 @@ import { useWakeLock } from 'react-screen-wake-lock';
 import { identity } from 'rxjs';
 
 import { useSound } from '@/hooks/pitch';
-import { firstNoteFromRoster, useRoster } from '@/hooks/roster';
+import { firstNoteFromRoster, useNoteRoster } from '@/hooks/roster/notes';
 import { useSettings } from '@/hooks/settings';
 import { trimDecimal } from '@/utils/math';
 import {
@@ -33,7 +33,7 @@ export function CapturedNote({
 }) {
   const settings = useSettings();
   const mapNote = settings.notation === 'Fixed Do' ? toFixedDo : identity;
-  const roster = useRoster();
+  const roster = useNoteRoster();
   const from = firstNoteFromRoster(roster) || 'E2';
   const sound = useSound({ step: frequencyDiff(from, nextNote(from)), pause });
   const alteration =

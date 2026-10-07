@@ -11,9 +11,9 @@ import {
 import { parseInput, Range, Roster, useRoster } from './common';
 import { rosterAsArray as noteRosterAsArray } from './notes';
 
-export function useSemitoneRoster(): Roster<number> | null {
+export function useSemitoneRoster(): number[] {
   const [roster] = useRosterInternal();
-  return roster;
+  return roster ? rosterAsArray(roster) : [];
 }
 
 export function useSemitonesInput(): [string, (input: string) => void] {
@@ -27,7 +27,7 @@ export function parseSemitonesInput(input: string): Roster<number> | string {
 
 export function randomIntervalFromRoster(
   notesRoster?: Roster<string> | null,
-  semitones?: Roster<number> | null,
+  semitones?: number[] | null,
   previous?: Pair
 ): Pair {
   if (!notesRoster || !semitones) {
@@ -36,7 +36,7 @@ export function randomIntervalFromRoster(
   const alteration =
     previous && isAltered(previous.to) ? getAlteration(previous.to) : randomAlteration();
   const notes = noteRosterAsArray(notesRoster, { alteration });
-  const intervals = enumerateIntervals(notes, rosterAsArray(semitones));
+  const intervals = enumerateIntervals(notes, semitones);
   return randomInterval(intervals, previous);
 }
 
@@ -91,14 +91,14 @@ function parseSemitone(semitone: string): number | string {
     return `Invalid semitone '${semitone}'`;
   }
   if (parsed < 1) {
-    return 'Only positive numbers are supported!';
+    return 'Only positive semitones are supported!';
   }
   return parsed;
 }
 
 function fromArray(semitones: string[]): number[] | string {
   const parsed = semitones.map(parseSemitone);
-  const error = parsed.find(s => typeof s === "string");
+  const error = parsed.find((s) => typeof s === 'string');
   if (error) {
     return error;
   }

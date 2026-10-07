@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 import { ExpectedInterval } from '@/components/expectations/ExpectedInterval';
 import { Task } from '@/components/Task';
 import { useCounter } from '@/hooks/counter';
-import { useRoster } from '@/hooks/roster/notes';
+import { useNoteRoster } from '@/hooks/roster/notes';
 import { randomIntervalFromRoster, useSemitoneRoster } from '@/hooks/roster/semitones';
 import { IntervalState } from '@/utils/music';
 
 export function Intervals() {
-  const roster = useRoster();
+  const roster = useNoteRoster();
   const semitones = useSemitoneRoster();
   const [interval, setInterval] = useState(() => randomIntervalFromRoster(roster, semitones));
   const [state, setState] = useState(() => IntervalState.From);
