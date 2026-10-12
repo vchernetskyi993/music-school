@@ -8,5 +8,6 @@ export function ExpectedInterval({ notes, state }: { notes: Pair; state: Interva
   const note = settings.notation === 'SPN' ? notes.from : toFixedDo(notes.from);
   const interval = toInterval(notes);
   const index = state === IntervalState.From ? 1 : 2;
-  return <ExpectedText text={`${note} +${interval} (${index})`} />;
+  const text = note && interval && index ? `${note} +${interval} (${index})` : '';
+  return <ExpectedText text={text} />;
 }

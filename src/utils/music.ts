@@ -61,13 +61,13 @@ export enum IntervalState {
   To,
 }
 
-export function enumerateIntervals(notes: string[]): Pair[] {
+export function enumerateIntervals(notes: string[], semitones: number[]): Pair[] {
   return notes.flatMap((from) => {
     return notes
       .map((to) => ({ from, to }))
       .filter((pair) => {
-        const semitones = tonalInterval(pair).semitones;
-        return semitones >= 1 && semitones <= 12;
+        const ss = tonalInterval(pair).semitones;
+        return semitones.includes(ss);
       });
   });
 }

@@ -1,14 +1,20 @@
 import { Popover, TextInput, Tooltip } from '@mantine/core';
 
-import { parseRosterInput, useRosterInput } from '@/hooks/roster';
-
 const arrowSize = 10;
-const usage =
-  "Supports either range (e.g., 'C3-E3') or comma-separated list of notes (e.g., 'C3,D3,E3')";
 
-export function NoteRoster({ intervals }: { intervals?: boolean }) {
-  const [input, setInput] = useRosterInput();
-  const parsed = parseRosterInput(input, { intervals });
+export function Roster<T>({
+  useInput,
+  parseInput,
+  label,
+  usage,
+}: {
+  useInput: () => [string, (input: string) => void];
+  parseInput: (input: string) => T | string;
+  label: string;
+  usage: string;
+}) {
+  const [input, setInput] = useInput();
+  const parsed = parseInput(input);
   const error = typeof parsed === 'string' ? parsed : '';
 
   return (
@@ -19,7 +25,7 @@ export function NoteRoster({ intervals }: { intervals?: boolean }) {
             value={input}
             error={!!error}
             onChange={(event) => setInput(event.currentTarget.value)}
-            label="Notes"
+            label={label}
           />
         </Tooltip>
       </Popover.Target>

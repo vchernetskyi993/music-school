@@ -7,7 +7,7 @@ import { ExpectedSound } from '@/components/expectations/ExpectedSound';
 import { pages } from '@/components/NavBar';
 import { Task } from '@/components/Task';
 import { useCounter } from '@/hooks/counter';
-import { randomNoteFromRoster, useRoster } from '@/hooks/roster';
+import { randomNoteFromRoster, useNoteRoster } from '@/hooks/roster/notes';
 
 const ExpectedStaff = lazy(() => import('@/components/expectations/ExpectedStaff'));
 
@@ -21,7 +21,7 @@ export function Notes() {
   const { tab } = useParams();
   const navigate = useNavigate();
   const counter = useCounter();
-  const roster = useRoster();
+  const roster = useNoteRoster();
   const [expected, setExpected] = useState(() => randomNoteFromRoster(roster));
   const [previousNote, setPreviousNote] = useState<string>();
   const [paused, pause] = useState(false);
