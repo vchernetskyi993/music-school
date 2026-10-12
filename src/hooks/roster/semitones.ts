@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { randomInt } from '@/utils/math';
 import {
   enumerateIntervals,
@@ -13,7 +15,7 @@ import { rosterAsArray as noteRosterAsArray } from './notes';
 
 export function useSemitoneRoster(): number[] | null {
   const [roster] = useRosterInternal();
-  return roster ? rosterAsArray(roster) : roster;
+  return useMemo(() => (roster ? rosterAsArray(roster) : roster), [roster]);
 }
 
 export function useSemitonesInput(): [string, (input: string) => void] {
