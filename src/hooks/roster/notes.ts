@@ -11,7 +11,7 @@ import {
   randomAlteration,
 } from '@/utils/music';
 
-import { parseInput, Roster, Range, useRoster } from './common';
+import { parseInput, Roster, Range, useRoster, Element, isRange } from './common';
 
 export function useNoteRoster(): Roster<string> | null {
   const [roster] = useRosterInternal();
@@ -26,12 +26,16 @@ export function useNotesInput(): [string, (input: string) => void] {
 type InputChecks = { semitones?: number[] | null };
 
 export function parseNotesInput(input: string, checks: InputChecks = {}): Roster<string> | string {
-  return parseInput(input, (roster) => {
-    if (roster instanceof Array) {
-      return validateArray(roster, checks) || roster;
-    }
-    return validateRange(roster, checks) || roster;
-  });
+  return parseInput(
+    input,
+    (e) => {
+      if (isRange(e)) {
+        return wrapError(validateRange(e)) || e;
+      }
+      return wrapError(validateNote(e)) || e;
+    },
+    (roster) => wrapError(validateNotesCount(roster) || validateIntervals(roster, checks))
+  );
 }
 
 export function randomNoteFromRoster(roster?: Roster<string> | null, previous?: string): string {
@@ -55,27 +59,28 @@ export function rosterAsArray(
   roster: Roster<string>,
   opts: { alteration?: Alteration } = {}
 ): string[] {
-  return roster instanceof Array ? roster : arrayRosterFromRange(roster.from, roster.to, opts);
+  return roster.flatMap((e) => (isRange(e) ? arrayRosterFromRange(e.from, e.to, opts) : [e]));
 }
 
 export function firstNoteFromRoster(roster?: Roster<string> | null): string {
   if (!roster) {
     return '';
   }
-  return roster instanceof Array ? roster[0] : roster.from;
+  const e = roster[0];
+  return isRange(e) ? e.from : e;
 }
 
-const defaultRoster: Range<string> = { from: 'E2', to: 'E5' };
+const defaultRoster: Roster<string> = [{ from: 'E2', to: 'E5' }];
 
 function useRosterInternal(): [Roster<string> | null, string, (input: string) => void] {
   return useRoster('note', defaultRoster, fromInput);
 }
 
-function fromInput(roster: Roster<string>, checks: InputChecks = {}): Roster<string> | string {
-  if (roster instanceof Array) {
-    return validateArray(roster, checks) || roster;
+function fromInput(e: Element<string>): Element<string> | Error {
+  if (isRange(e)) {
+    return wrapError(validateRange(e)) || e;
   }
-  return validateRange(roster, checks) || roster;
+  return wrapError(validateNote(e)) || e;
 }
 
 function validateNote(note: string): string {
@@ -88,14 +93,12 @@ function validateNote(note: string): string {
   return '';
 }
 
-function validateRange({ from, to }: Range<string>, checks: InputChecks): string {
-  return (
-    validateNote(from) ||
-    validateNote(to) ||
-    validateFromLowerThanTo(from, to) ||
-    validateIntervals({ from, to }, checks) ||
-    ''
-  );
+function wrapError(message: string): Error | null {
+  return message ? new Error(message) : null;
+}
+
+function validateRange({ from, to }: Range<string>): string {
+  return validateNote(from) || validateNote(to) || validateFromLowerThanTo(from, to) || '';
 }
 
 function validateFromLowerThanTo(from: string, to: string): string {
@@ -105,19 +108,14 @@ function validateFromLowerThanTo(from: string, to: string): string {
   return '';
 }
 
-function validateArray(notes: string[], checks: InputChecks): string {
-  const parseError = notes.map(validateNote).find((e) => !!e);
-  if (parseError) {
-    return parseError;
-  }
-  const frequencies = new Set(notes.map(getFrequency));
-  if (frequencies.size < 2) {
+function validateNotesCount(roster: Roster<string>): string {
+  if (new Set(rosterAsArray(roster).map(getFrequency)).size < 2) {
     return 'At least 2 notes are required!';
   }
-  return validateIntervals(notes, checks) || '';
+  return '';
 }
 
-function validateIntervals(roster: Roster<string>, checks: InputChecks) {
+function validateIntervals(roster: Roster<string>, checks: InputChecks): string {
   if (!checks.semitones) {
     return '';
   }
@@ -125,4 +123,5 @@ function validateIntervals(roster: Roster<string>, checks: InputChecks) {
   if (intervals.length < 2) {
     return 'At least two valid intervals are required!';
   }
+  return '';
 }

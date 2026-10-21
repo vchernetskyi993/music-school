@@ -3,15 +3,26 @@ import { expect, test } from 'vitest';
 import { parseSemitonesInput } from './semitones';
 
 test('parses range', () => {
-  expect(parseSemitonesInput('1-10')).toEqual({ from: 1, to: 10 });
+  expect(parseSemitonesInput('1-10')).toEqual([{ from: 1, to: 10 }]);
 });
 
 test('parses array', () => {
   expect(parseSemitonesInput('3,4,10')).toEqual([3, 4, 10]);
 });
 
-test('return distinct semitones', () => {
-  expect(parseSemitonesInput('3,3,3')).toEqual([3]);
+test('parses list of ranges', () => {
+  expect(parseSemitonesInput('1-3,10-12')).toEqual([
+    { from: 1, to: 3 },
+    { from: 10, to: 12 },
+  ]);
+});
+
+test('parses range and semitone', () => {
+  expect(parseSemitonesInput('12,11,2-3')).toEqual([12, 11, { from: 2, to: 3 }]);
+});
+
+test('supports whitespace', () => {
+  expect(parseSemitonesInput('12, 11, 2-3')).toEqual([12, 11, { from: 2, to: 3 }]);
 });
 
 test.each([['3-1'], ['3-3']])('requires range to grow from the left', (range) => {

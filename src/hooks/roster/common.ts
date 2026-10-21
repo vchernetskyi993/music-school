@@ -1,22 +1,43 @@
 import { useLocalStorage } from '@mantine/hooks';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 import { Roster } from '@/components/roster/Roster';
 
-export type Roster<T> = T[] | Range<T>;
+export type Roster<T> = Element<T>[];
+export type Element<T> = Range<T> | T;
 export type Range<T> = { from: T; to: T };
 
-type FromInput<T> = (roster: Roster<string>) => Roster<T> | string;
+export function isRange<T>(e: Element<T>): e is Range<T> {
+  return typeof e === 'object';
+}
 
-export function parseInput<T>(input: string, fromInput: FromInput<T>): Roster<T> | string {
-  if (input.includes(',')) {
-    return fromInput(input.split(','));
-  }
-  if (input.includes('-')) {
-    const [from, to] = input.split('-');
+type FromInput<T> = (element: Element<string>) => Element<T> | Error;
+type ValidateRoster<T> = (roster: Roster<T>) => null | Error;
+
+export function parseInput<T>(
+  input: string,
+  fromInput: FromInput<T>,
+  validate: ValidateRoster<T> = () => null
+): Roster<T> | string {
+  const parsed = input.split(',').map((element) => {
+    const regex = /(.+?)\s*-\s*(.+)/g;
+    const matches = [...element.matchAll(regex)];
+    if (matches.length === 0) {
+      return fromInput(element);
+    }
+    const [_, from, to] = matches[0];
     return fromInput({ from, to });
+  });
+  const error = parsed.find((e) => e instanceof Error);
+  if (error) {
+    return error.message;
   }
-  return fromInput([input]);
+  const result = parsed as Roster<T>;
+  const validationError = validate(result);
+  if (validationError) {
+    return validationError.message;
+  }
+  return result;
 }
 
 export function useRoster<T>(
@@ -28,13 +49,12 @@ export function useRoster<T>(
     key: `${key}-roster`,
     defaultValue: rosterToString(defaultRoster),
   });
-  const [roster, setRoster] = useState<Roster<T> | null>(rosterFromInput(input, fromInput));
-  useEffect(() => setRoster(rosterFromInput(input, fromInput)), [input]);
+  const roster = useMemo(() => rosterFromInput(input, fromInput), [input]);
   return [roster, input, setInput];
 }
 
 function rosterToString<T>(roster: Roster<T>): string {
-  return roster instanceof Array ? roster.join(',') : `${roster.from}-${roster.to}`;
+  return roster.map((e) => (isRange(e) ? `${e.from}-${e.to}` : e)).join(',');
 }
 
 function rosterFromInput<T>(input: string, fromInput: FromInput<T>): Roster<T> | null {
